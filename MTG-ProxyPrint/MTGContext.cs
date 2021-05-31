@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace MTG_ProxyPrint
 {
     public class MTGContext
@@ -16,9 +15,9 @@ namespace MTG_ProxyPrint
             return false;
         }
 
-        public Dictionary<string, List<object>> CollectCardImages(Dictionary<string, List<string>> cards)
+        public Dictionary<string, List<object>> CollectCardImages(List<SimpleDeck> decks)
         {
-            if (cards == null || cards.Count <= 0)
+            if (decks == null || decks.Count <= 0)
             {
                 return null;
             }

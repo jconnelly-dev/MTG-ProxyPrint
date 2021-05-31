@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace MTG_ProxyPrint
 {
-    public interface ProxyBuilder
+    public interface IProxyBuilder
     {
         public bool Build(Dictionary<string, List<object>> decks);
     }
 
-    public class PDFProxyBuilder : ProxyBuilder
+    public class PDFProxyBuilder : IProxyBuilder
     {
         public PDFProxyBuilder()
         {

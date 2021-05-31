@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\jconnelly\\OneDrive - forceamerica.com\\Documents\\Visual Studio 2019\\MTG-ProxyPrint\\MTG-ProxyPrint\\MTG-ProxyPrint\\MTG-ProxyPrint.csproj": {}
+    "C:\\TomatoSoup\\jconnelly-dev\\Hello\\MTG-ProxyPrint\\MTG-ProxyPrint.csproj": {}
   },
   "projects": {
-    "C:\\Users\\jconnelly\\OneDrive - forceamerica.com\\Documents\\Visual Studio 2019\\MTG-ProxyPrint\\MTG-ProxyPrint\\MTG-ProxyPrint\\MTG-ProxyPrint.csproj": {
+    "C:\\TomatoSoup\\jconnelly-dev\\Hello\\MTG-ProxyPrint\\MTG-ProxyPrint.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jconnelly\\OneDrive - forceamerica.com\\Documents\\Visual Studio 2019\\MTG-ProxyPrint\\MTG-ProxyPrint\\MTG-ProxyPrint\\MTG-ProxyPrint.csproj",
+        "projectUniqueName": "C:\\TomatoSoup\\jconnelly-dev\\Hello\\MTG-ProxyPrint\\MTG-ProxyPrint.csproj",
         "projectName": "MTG-ProxyPrint",
-        "projectPath": "C:\\Users\\jconnelly\\OneDrive - forceamerica.com\\Documents\\Visual Studio 2019\\MTG-ProxyPrint\\MTG-ProxyPrint\\MTG-ProxyPrint\\MTG-ProxyPrint.csproj",
+        "projectPath": "C:\\TomatoSoup\\jconnelly-dev\\Hello\\MTG-ProxyPrint\\MTG-ProxyPrint.csproj",
         "packagesPath": "C:\\Users\\jconnelly\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jconnelly\\OneDrive - forceamerica.com\\Documents\\Visual Studio 2019\\MTG-ProxyPrint\\MTG-ProxyPrint\\MTG-ProxyPrint\\obj\\",
+        "outputPath": "C:\\TomatoSoup\\jconnelly-dev\\Hello\\MTG-ProxyPrint\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\jconnelly\\AppData\\Roaming\\NuGet\\NuGet.Config",

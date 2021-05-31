@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace MTG_ProxyPrint
 {
     public class Program 
     {
-        private const string APP_NAME = "MTG_ProxyPrint"; 
+        #region Constants.
+        private const string APP_NAME = "MTG_ProxyPrint";
+        private const string PROXY_PATH = @"C:\TomatoSoup\jconnelly-dev\Hello\example-decks";
+        #endregion
 
         public static void Main(string[] args)
         {
@@ -18,20 +20,21 @@ namespace MTG_ProxyPrint
                 MTGContext context = new MTGContext();
 
                 // Collect deck lists based on the type of request.
-                ProxyRequest request = new ProxyTextFile();
-                Dictionary<string, List<string>> deskLists = request.CollectDeckLists();
+                IProxyRequest request = new ProxyTextFile(PROXY_PATH);
+                List<SimpleDeck> deskLists = request.CollectDeckLists();
 
                 // Collect card images from datastore.
                 Dictionary<string, List<object>> cardImages = context.CollectCardImages(deskLists);
 
                 // Create proxies.
-                ProxyBuilder builder = new PDFProxyBuilder();
+                IProxyBuilder builder = new PDFProxyBuilder();
                 builder.Build(cardImages);
 
             }
             catch (Exception ex)
             {
-
+                string errMsg = string.Format("Uncaught Exception: {0}", ex.Message);
+                Console.WriteLine(errMsg);
             }
 
             Console.WriteLine($"--- END - {APP_NAME} ---");
