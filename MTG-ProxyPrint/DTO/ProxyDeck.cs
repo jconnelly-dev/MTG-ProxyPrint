@@ -1,23 +1,23 @@
 ﻿using System.Collections.Generic;
 
 
-namespace MTG_ProxyPrint
+namespace ProxyPrint.DTO
 {
-    public class SimpleDeck
+    public class ProxyDeck
     {
-        #region Properties.
+        #region Members.
         public string Name { get; set; }
-        public List<SimpleCard> Cards { get; set; }
+        public List<ProxyCard> Cards { get; set; }
         #endregion
 
         #region Constructors.
-        public SimpleDeck(string name)
+        public ProxyDeck(string name)
         {
             Name = name;
-            Cards = new List<SimpleCard>();
+            Cards = new List<ProxyCard>();
         }
 
-        public SimpleDeck(string name, List<SimpleCard> cards)
+        public ProxyDeck(string name, List<ProxyCard> cards)
         {
             Name = name;
             Cards = cards;

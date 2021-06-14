@@ -1,0 +1,13 @@
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicCardAPI\obj\x64\Debug\net5.0\MagicCardAPI.GeneratedMSBuildEditorConfig.editorconfig
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicCardAPI\obj\x64\Debug\net5.0\MagicCardAPI.AssemblyInfoInputs.cache
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicCardAPI\obj\x64\Debug\net5.0\MagicCardAPI.AssemblyInfo.cs
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicCardAPI\obj\x64\Debug\net5.0\MagicCardAPI.csproj.CoreCompileInputs.cache
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicCardAPI\bin\x64\Debug\net5.0\MagicCardAPI.dll.config
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicCardAPI\bin\x64\Debug\net5.0\MagicCardAPI.deps.json
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicCardAPI\bin\x64\Debug\net5.0\MagicCardAPI.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicCardAPI\bin\x64\Debug\net5.0\ref\MagicCardAPI.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicCardAPI\bin\x64\Debug\net5.0\MagicCardAPI.pdb
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicCardAPI\obj\x64\Debug\net5.0\MagicCardAPI.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicCardAPI\obj\x64\Debug\net5.0\ref\MagicCardAPI.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicCardAPI\obj\x64\Debug\net5.0\MagicCardAPI.pdb
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicCardAPI\obj\x64\Debug\net5.0\MagicCardAPI.csproj.AssemblyReference.cache

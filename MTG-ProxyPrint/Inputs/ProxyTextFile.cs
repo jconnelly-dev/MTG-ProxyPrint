@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 
+using ProxyPrint.DTO;
 
-namespace MTG_ProxyPrint
+
+namespace ProxyPrint.Inputs
 {
-    public interface IProxyRequest
-    {
-        List<SimpleDeck> CollectDeckLists();
-    }
-
     public class ProxyTextFile : IProxyRequest
     {
         #region Members.
@@ -29,13 +26,13 @@ namespace MTG_ProxyPrint
                 throw new ArgumentException("Error: ProxyTextFile() Invalid Base Path.");
             }
 
-            InitFromConfigFile(basePath, out _proxyPath);
-
-            DirectoryInfo directory = new DirectoryInfo(_proxyPath);
+            DirectoryInfo directory = new DirectoryInfo(basePath);
             if (directory == null || !directory.Exists)
             {
                 throw new FileNotFoundException("Error: ProxyTextFile() Proxy Directory Not Found.");
             }
+
+            _proxyPath = basePath;
 
             _textFiles = new List<FileInfo>();
             FileInfo[] files = directory.GetFiles(EXPECTED_FILE_FORMAT);
@@ -53,11 +50,6 @@ namespace MTG_ProxyPrint
             {
                 throw new InvalidDataException("Error: ProxyTextFile() No Text Files Found.");
             }
-        }
-
-        private void InitFromConfigFile(string basePath, out string proxyPath)
-        {
-            proxyPath = basePath + @"Uploads\";
         }
         #endregion
 

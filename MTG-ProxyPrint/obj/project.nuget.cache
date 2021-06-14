@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2ct8sHl0K98/+4FQYATTdu95lj5WjAUgPQPQsf/NIyKJDfK+kC/JAMxZiR6JYfzIN12yRJ1HvaMfD0md0taeag==",
-  "success": true,
-  "projectFilePath": "C:\\TomatoSoup\\jconnelly-dev\\MTG-Proxy-App\\MTG-ProxyPrint\\MTG-ProxyPrint.csproj",
+  "dgSpecHash": "1m7u3t7/9xW6CDtDMgX+37oMlnZiygqHzDJ4WKnh3bHmHEuCFXRphPTv1ZJ03O21uFO+rIJt8zwEvMEnSNGDGg==",
+  "success": false,
+  "projectFilePath": "C:\\TomatoSoup\\jconnelly-dev\\MTG-Proxy-App\\MTG-ProxyPrint\\PrintProxy.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jconnelly\\.nuget\\packages\\microsoft.aspnet.webapi.client\\5.2.7\\microsoft.aspnet.webapi.client.5.2.7.nupkg.sha512",
     "C:\\Users\\jconnelly\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",
@@ -91,5 +91,15 @@
     "C:\\Users\\jconnelly\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\jconnelly\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project MagicCardAPI is not compatible with netcoreapp3.1 (.NETCoreApp,Version=v3.1). Project MagicCardAPI supports: net5.0 (.NETCoreApp,Version=v5.0)",
+      "libraryId": "MagicCardAPI",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

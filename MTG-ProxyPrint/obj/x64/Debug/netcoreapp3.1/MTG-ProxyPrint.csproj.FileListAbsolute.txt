@@ -32,7 +32,6 @@ C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MTG-ProxyPrint\bin\x64\Debug\netcoreap
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MTG-ProxyPrint\bin\x64\Debug\netcoreapp3.1\System.Net.Http.Formatting.dll
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MTG-ProxyPrint\bin\x64\Debug\netcoreapp3.1\Newtonsoft.Json.dll
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MTG-ProxyPrint\bin\x64\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
-C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MTG-ProxyPrint\obj\x64\Debug\netcoreapp3.1\MTG-ProxyPrint.csproj.AssemblyReference.cache
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MTG-ProxyPrint\obj\x64\Debug\netcoreapp3.1\MTG-ProxyPrint.AssemblyInfoInputs.cache
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MTG-ProxyPrint\obj\x64\Debug\netcoreapp3.1\MTG-ProxyPrint.AssemblyInfo.cs
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MTG-ProxyPrint\obj\x64\Debug\netcoreapp3.1\MTG-ProxyPrint.csproj.CoreCompileInputs.cache

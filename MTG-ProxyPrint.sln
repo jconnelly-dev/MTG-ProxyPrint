@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTG-ProxyPrint", "MTG-ProxyPrint\MTG-ProxyPrint.csproj", "{44388F30-00EE-4EAF-88C2-4ED7CC859CC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrintProxy", "MTG-ProxyPrint\PrintProxy.csproj", "{44388F30-00EE-4EAF-88C2-4ED7CC859CC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicCardAPI", "MagicCardAPI\MagicCardAPI.csproj", "{A2AB8859-679C-429E-9DEA-4297F3B7F1AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{44388F30-00EE-4EAF-88C2-4ED7CC859CC6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{44388F30-00EE-4EAF-88C2-4ED7CC859CC6}.Release|x64.ActiveCfg = Release|x64
 		{44388F30-00EE-4EAF-88C2-4ED7CC859CC6}.Release|x64.Build.0 = Release|x64
+		{A2AB8859-679C-429E-9DEA-4297F3B7F1AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2AB8859-679C-429E-9DEA-4297F3B7F1AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2AB8859-679C-429E-9DEA-4297F3B7F1AB}.Debug|x64.ActiveCfg = Debug|x64
+		{A2AB8859-679C-429E-9DEA-4297F3B7F1AB}.Debug|x64.Build.0 = Debug|x64
+		{A2AB8859-679C-429E-9DEA-4297F3B7F1AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2AB8859-679C-429E-9DEA-4297F3B7F1AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2AB8859-679C-429E-9DEA-4297F3B7F1AB}.Release|x64.ActiveCfg = Release|Any CPU
+		{A2AB8859-679C-429E-9DEA-4297F3B7F1AB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

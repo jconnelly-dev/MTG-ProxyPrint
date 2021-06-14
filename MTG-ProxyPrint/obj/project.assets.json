@@ -1441,6 +1441,16 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
         }
+      },
+      "MagicCardAPI/1.0.0": {
+        "type": "project",
+        "framework": "Unsupported,Version=v0.0",
+        "compile": {
+          "bin/placeholder/MagicCardAPI.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/MagicCardAPI.dll": {}
+        }
       }
     }
   },
@@ -5272,10 +5282,16 @@
         "system.xml.xmldocument.4.3.0.nupkg.sha512",
         "system.xml.xmldocument.nuspec"
       ]
+    },
+    "MagicCardAPI/1.0.0": {
+      "type": "project",
+      "path": "../MagicCardAPI/MagicCardAPI.csproj",
+      "msbuildProject": "../MagicCardAPI/MagicCardAPI.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "MagicCardAPI >= 1.0.0",
       "Microsoft.AspNet.WebApi.Client >= 5.2.7"
     ]
   },
@@ -5286,9 +5302,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\TomatoSoup\\jconnelly-dev\\MTG-Proxy-App\\MTG-ProxyPrint\\MTG-ProxyPrint.csproj",
-      "projectName": "MTG-ProxyPrint",
-      "projectPath": "C:\\TomatoSoup\\jconnelly-dev\\MTG-Proxy-App\\MTG-ProxyPrint\\MTG-ProxyPrint.csproj",
+      "projectUniqueName": "C:\\TomatoSoup\\jconnelly-dev\\MTG-Proxy-App\\MTG-ProxyPrint\\PrintProxy.csproj",
+      "projectName": "PrintProxy",
+      "projectPath": "C:\\TomatoSoup\\jconnelly-dev\\MTG-Proxy-App\\MTG-ProxyPrint\\PrintProxy.csproj",
       "packagesPath": "C:\\Users\\jconnelly\\.nuget\\packages\\",
       "outputPath": "C:\\TomatoSoup\\jconnelly-dev\\MTG-Proxy-App\\MTG-ProxyPrint\\obj\\",
       "projectStyle": "PackageReference",
@@ -5310,7 +5326,11 @@
       "frameworks": {
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\TomatoSoup\\jconnelly-dev\\MTG-Proxy-App\\MagicCardAPI\\MagicCardAPI.csproj": {
+              "projectPath": "C:\\TomatoSoup\\jconnelly-dev\\MTG-Proxy-App\\MagicCardAPI\\MagicCardAPI.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -5346,5 +5366,16 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project MagicCardAPI is not compatible with netcoreapp3.1 (.NETCoreApp,Version=v3.1). Project MagicCardAPI supports: net5.0 (.NETCoreApp,Version=v5.0)",
+      "libraryId": "MagicCardAPI",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

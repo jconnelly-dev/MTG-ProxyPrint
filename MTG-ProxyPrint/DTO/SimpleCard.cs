@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MTG_ProxyPrint
+﻿
+namespace ProxyPrint.DTO
 {
     public class SimpleCard
     {
-        #region Properties.
+        #region Members.
         public string Name { get; set; }
         public int Quantity { get; set; }
         #endregion
