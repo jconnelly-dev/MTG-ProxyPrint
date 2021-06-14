@@ -11,6 +11,7 @@ namespace MTG_ProxyPrint
         public int Quantity { get; set; }
         #endregion
 
+        #region Constructors.
         public SimpleCard(string name)
         {
             Name = name;
@@ -22,5 +23,6 @@ namespace MTG_ProxyPrint
             Name = name;
             Quantity = quantity;
         }
+        #endregion
     }
 }

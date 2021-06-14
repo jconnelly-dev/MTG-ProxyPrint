@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+
 
 namespace MTG_ProxyPrint
 {
@@ -11,6 +10,7 @@ namespace MTG_ProxyPrint
         public List<SimpleCard> Cards { get; set; }
         #endregion
 
+        #region Constructors.
         public SimpleDeck(string name)
         {
             Name = name;
@@ -22,5 +22,6 @@ namespace MTG_ProxyPrint
             Name = name;
             Cards = cards;
         }
+        #endregion
     }
 }
