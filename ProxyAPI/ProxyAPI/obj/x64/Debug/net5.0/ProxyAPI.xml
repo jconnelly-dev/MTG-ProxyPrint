@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ProxyAPI</name>
+    </assembly>
+    <members>
+        <member name="T:ProxyAPI.Controllers.MagicProxyController">
+            <summary>
+            Provides API Web services for Magic the Gathering Proxies.
+            </summary>
+        </member>
+        <member name="M:ProxyAPI.Controllers.MagicProxyController.GetCard(System.String)">
+            <summary>
+            Get the blah...
+            </summary>
+            <returns>blah...</returns>
+            <example>GET: /api/1.0/card</example>
+            <response code="200">Success</response>
+            <response code="400">Unable to get blah... due to processing errors.</response>
+            <response code="500">Unable to get blah... due to validation errors.</response>
+        </member>
+        <member name="T:ProxyAPI.Models.CardIdentifier">
+            <summary>
+            Magic the Gathering card identifier.
+            </summary>
+        </member>
+        <member name="P:ProxyAPI.Models.CardIdentifier.Name">
+            <summary>
+            Magic the Gathering card name.
+            </summary>
+            <example>"Ad Nauseam"</example>
+        </member>
+    </members>
+</doc>
