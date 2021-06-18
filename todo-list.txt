@@ -1,0 +1,21 @@
+=====================================================================================
+= TODO LIST:									    =
+=====================================================================================
+
+make logger log to file.
+
+build remaining endpoints for ->
+
+                // Collect deck lists based on the type of request input.
+                IProxyRequest request = new ProxyTextFile(InputPath);
+                List<SimpleDeck> deskLists = request.CollectDeckLists();
+
+                // Validate connection w/card datastore.
+                MTGContext context = new MTGContext(DownloadPath);
+
+                // Collect card images from datastore.
+                List<ProxyDeck> cardImages = context.CollectCardImages(deskLists);
+
+                // Create proxies.
+                IProxyBuilder builder = new PDFProxyBuilder(OutputPath);
+                builder.Build(cardImages);
