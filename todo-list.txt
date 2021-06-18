@@ -4,18 +4,22 @@
 
 make logger log to file.
 
+finish implementation of CollectCardImages() so that we download all images.
+
+implement the PDFProxyBuilder that creates the actual pdf.
+
 build remaining endpoints for ->
 
-                // Collect deck lists based on the type of request input.
-                IProxyRequest request = new ProxyTextFile(InputPath);
-                List<SimpleDeck> deskLists = request.CollectDeckLists();
+	// Collect deck lists based on the type of request input.
+	IProxyRequest request = new ProxyTextFile(InputPath);
+	List<SimpleDeck> deskLists = request.CollectDeckLists();
 
-                // Validate connection w/card datastore.
-                MTGContext context = new MTGContext(DownloadPath);
+	// Validate connection w/card datastore.
+	MTGContext context = new MTGContext(DownloadPath);
 
-                // Collect card images from datastore.
-                List<ProxyDeck> cardImages = context.CollectCardImages(deskLists);
+	// Collect card images from datastore.
+	List<ProxyDeck> cardImages = context.CollectCardImages(deskLists);
 
-                // Create proxies.
-                IProxyBuilder builder = new PDFProxyBuilder(OutputPath);
-                builder.Build(cardImages);
+	// Create proxies.
+	IProxyBuilder builder = new PDFProxyBuilder(OutputPath);
+	builder.Build(cardImages);

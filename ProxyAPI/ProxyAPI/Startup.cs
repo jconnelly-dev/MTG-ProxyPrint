@@ -76,6 +76,14 @@ namespace ProxyAPI
                 ProxyConfigs singletonConfigs = new ProxyConfigs(Configuration, logger, _apiName, _apiVersion, Environment.MachineName);
                 return singletonConfigs;
             });
+
+            // TODO: Add singleton of our MagicConsumerContext to all controllers through dependency injection.
+            //services.AddSingleton<MTGContext>((container) =>
+            //{
+            //    ILogger<MTGContext> logger = container.GetRequiredService<ILogger<MTGContext>>();
+            //    MTGContext singletonContext = new MTGContext(DownloadPath);
+            //    return singletonConfigs;
+            //});
         }
 
         /*
