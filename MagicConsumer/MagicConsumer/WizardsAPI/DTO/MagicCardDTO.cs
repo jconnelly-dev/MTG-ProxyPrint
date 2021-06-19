@@ -27,7 +27,7 @@ namespace MagicConsumer.WizardsAPI.DTO
         public string power;
         public string toughness;
         public string layout;
-        public int multiverseid;
+        public string multiverseid;
         public string imageUrl;
         public string watermark;
         public MagicRulingDTO[] rulings;

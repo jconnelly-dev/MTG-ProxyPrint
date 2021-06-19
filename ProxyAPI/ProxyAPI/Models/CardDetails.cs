@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ProxyAPI.Models
 {
     /// <summary>
-    /// The complete description of a unique Magic the Gathering card.
+    /// The complete description of a Magic the Gathering card.
     /// </summary>
     public class CardDetails
     {

@@ -14,6 +14,6 @@ namespace MagicConsumer.WizardsAPI.DTO
         public string flavor;
         public string imageUrl;
         public string language;
-        public int multiverseid;
+        public string multiverseid;
     }
 }

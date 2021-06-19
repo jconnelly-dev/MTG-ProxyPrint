@@ -5,30 +5,25 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using MagicConsumer.WizardsAPI.DTO;
 using Newtonsoft.Json;
+using MagicConsumer.WizardsAPI.DTO;
 
 namespace MagicConsumer.WizardsAPI
 {
     public class WizardsConsumer : IMagicConsumer
     {
         #region Members.
-        private readonly string _apiBaseUrl;
-        private readonly string _apiDomain;
-        private readonly string _apiVersion;
-        private readonly string _apiResource;
+        private readonly string _downloadPath;
+        private readonly string _apiCompositeUrl;
         private readonly int _apiRequestTimeout;
         #endregion
 
         #region Constructors.
-        public WizardsConsumer(string apiDomain, string apiVersion, string apiResource, int apiRequestTimeout)
+        public WizardsConsumer(string apiDomain, string apiVersion, string apiResource, int apiRequestTimeout, string downloadPath)
         {
-            _apiDomain = apiDomain;
-            _apiResource = apiResource;
-            _apiVersion = apiVersion;
+            _downloadPath = downloadPath;
             _apiRequestTimeout = apiRequestTimeout;
-
-            _apiBaseUrl = $"{_apiDomain}/{apiVersion}/{apiResource}";
+            _apiCompositeUrl = $"{apiDomain}/{apiVersion}/{apiResource}";
 
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.DefaultConnectionLimit = 9999;
@@ -47,9 +42,7 @@ namespace MagicConsumer.WizardsAPI
                 throw new HttpRequestException("Error: ValidateSimpleRequest() Simple Card Request Failed.");
             }
 
-            string workingDirectory = Environment.CurrentDirectory;
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
-            string cardPath = DownloadImage(card, projectDirectory);
+            string cardPath = DownloadImage(card);
             if (!File.Exists(cardPath))
             {
                 throw new HttpRequestException("Error: ValidateSimpleRequest() Simple Image Request Failed.");
@@ -63,74 +56,108 @@ namespace MagicConsumer.WizardsAPI
         {
             MagicCardDTO card = null;
 
-            // DEBUG: https://api.magicthegathering.io/v1/cards/386615
+            string jsonResponse = null;
 
-            string url = $"{_apiBaseUrl}/{multiverseId}";
-            string contentType = "application/json";
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.Timeout = new TimeSpan(0, 0, _apiRequestTimeout);
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
-                using (var response = client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).Result) // forcing sync
-                {
-                    response.EnsureSuccessStatusCode();
+                // DEBUG: https://api.magicthegathering.io/v1/cards/386615
 
-                    string jsonString = response.Content.ReadAsStringAsync().Result; // forcing sync
-                    if (!string.IsNullOrEmpty(jsonString))
+                string url = $"{_apiCompositeUrl}/{multiverseId}";
+                string contentType = "application/json";
+                using (HttpClient client = new HttpClient())
+                {
+                    client.Timeout = new TimeSpan(0, 0, _apiRequestTimeout);
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
+                    using (var response = client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).Result) // forcing sync
                     {
-                        MagicCardResponse content = JsonConvert.DeserializeObject<MagicCardResponse>(jsonString);
-                        if (content != null && content.card != null)
-                        {
-                            card = content.card;
-                        }
+                        response.EnsureSuccessStatusCode();
+                        jsonResponse = response.Content.ReadAsStringAsync().Result; // forcing sync
+
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unable to Find Card Name. {ex.Message}");
+            }
+
+            try
+            {
+                if (!string.IsNullOrEmpty(jsonResponse))
+                {
+                    MagicCardResponse content = JsonConvert.DeserializeObject<MagicCardResponse>(jsonResponse);
+                    if (content != null && content.card != null)
+                    {
+                        card = content.card;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Internal Deserialization Error: {ex.Message}");
             }
 
             return card;
         }
 
-        public List<MagicCardDTO> GetCards(string cardName)
+        public List<MagicCardDTO> GetCards(string rawCardName)
         {
-            List<MagicCardDTO> card = null; // all versions of the card associated w/specified name.
+            List<MagicCardDTO> card = null;
 
-            // DEBUG: https://api.magicthegathering.io/v1/cards?name="Archangel%20Avacyn"
+            string jsonResponse = null;
 
-            string htmlCardName = cardName.Trim().Replace(" ", "%20");
-
-            string url = $"{_apiBaseUrl}?name=\"{cardName}\"";
-            string contentType = "application/json";
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.Timeout = new TimeSpan(0, 0, _apiRequestTimeout);
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
-                using (var response = client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).Result) // forcing sync
-                {
-                    response.EnsureSuccessStatusCode();
+                string cardName = rawCardName.Trim();
 
-                    string jsonString = response.Content.ReadAsStringAsync().Result; // forcing sync
-                    if (!string.IsNullOrEmpty(jsonString))
+                // DEBUG: https://api.magicthegathering.io/v1/cards?name="Archangel%20Avacyn"
+
+                string url = $"{_apiCompositeUrl}?name={cardName}";
+                string contentType = "application/json";
+                using (HttpClient client = new HttpClient())
+                {
+                    client.Timeout = new TimeSpan(0, 0, _apiRequestTimeout);
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
+                    using (var response = client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).Result) // forcing sync
                     {
-                        MagicCardsResponse content = JsonConvert.DeserializeObject<MagicCardsResponse>(jsonString);
-                        if (content != null && content.cards != null && content.cards.Length > 0)
-                        {
-                            card = content.cards.ToList<MagicCardDTO>();
-                        }
+                        response.EnsureSuccessStatusCode();
+                        jsonResponse = response.Content.ReadAsStringAsync().Result; // forcing sync
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unable to Find Card Name. {ex.Message}");
+            }
+
+            try
+            {
+                if (!string.IsNullOrEmpty(jsonResponse))
+                {
+                    MagicCardsResponse content = JsonConvert.DeserializeObject<MagicCardsResponse>(jsonResponse);
+                    if (content != null && content.cards != null && content.cards.Length > 0)
+                    {
+                        // all versions of the card associated w/specified name.
+                        card = content.cards.ToList<MagicCardDTO>();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Internal Deserialization Error: {ex.Message}");
             }
 
             return card;
         }
 
-        private string DownloadImage(MagicCardDTO card, string downloadPath)
+        private string DownloadImage(MagicCardDTO card)
         {
-            if (card == null || string.IsNullOrEmpty(card.name) || string.IsNullOrEmpty(card.imageUrl) || string.IsNullOrEmpty(downloadPath))
+            if (card == null || string.IsNullOrEmpty(card.name) || string.IsNullOrEmpty(card.imageUrl))
             {
                 return null;
             }
 
-            string cardPath = $"{downloadPath}/{card.name}.png";
+            string cardPath = $"{_downloadPath}/{card.multiverseid}.png";
             if (File.Exists(cardPath))
             {
                 File.Delete(cardPath);

@@ -14,7 +14,7 @@
             Get the Magic the Gathering card details for the most recent printed version.
             </summary>
             <returns>CardDetails</returns>
-            <example>GET: /api/1.0/card/newest/Liliana%20of%20the%20Veil</example>
+            <example>GET: /api/1.0/card/newest/angel's grace</example>
             <response code="200">Success</response>
             <response code="400">Unable to get CardDetails due to validation errors.</response>
             <response code="500">Unable to get CardDetails due to processing errors.</response>
@@ -24,7 +24,7 @@
             Get the Magic the Gathering card details for the oldest printed version.
             </summary>
             <returns>CardDetails</returns>
-            <example>GET: /api/1.0/card/oldest/Liliana%20of%20the%20Veil</example>
+            <example>GET: /api/1.0/card/oldest/liliana%20of%20the%20veil</example>
             <response code="200">Success</response>
             <response code="400">Unable to get CardDetails due to validation errors.</response>
             <response code="500">Unable to get CardDetails due to processing errors.</response>
@@ -34,7 +34,7 @@
             Get the Magic the Gathering card details for all printed versions of the card.
             </summary>
             <returns>List CardDetails</returns>
-            <example>GET: /api/1.0/card/Liliana%20of%20the%20Veil</example>
+            <example>GET: /api/1.0/card/fury</example>
             <response code="200">Success</response>
             <response code="400">Unable to get CardDetails due to validation errors.</response>
             <response code="500">Unable to get CardDetails due to processing errors.</response>
@@ -44,19 +44,19 @@
             Provides API REST-based Web services for Magic the Gathering Deck Proxies.
             </summary>
         </member>
-        <member name="M:ProxyAPI.Controllers.DeckController.GetCard(System.String)">
+        <member name="M:ProxyAPI.Controllers.DeckController.UploadDecklist(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
-            Get the blah...
+            Upload file containing deck list. Valid file line's begin w/a numeric, followed by whitespace, followed by the card name. i.e. "4 Liliana of the Veil".
             </summary>
-            <returns>blah...</returns>
-            <example>GET: /api/1.0/card</example>
+            <returns>UploadIdentifier</returns>
+            <example>POST: /api/1.0/deck</example>
             <response code="200">Success</response>
-            <response code="400">Unable to get blah... due to processing errors.</response>
-            <response code="500">Unable to get blah... due to validation errors.</response>
+            <response code="400">Unable to get Upload file due to processing errors.</response>
+            <response code="500">Unable to get Upload file due to validation errors.</response>
         </member>
         <member name="T:ProxyAPI.Models.CardDetails">
             <summary>
-            The complete description of a unique Magic the Gathering card.
+            The complete description of a Magic the Gathering card.
             </summary>
         </member>
         <member name="P:ProxyAPI.Models.CardDetails.Name">
@@ -208,6 +208,17 @@
             Sanctioned formats where this card can be legally played.
             </summary>
             <example>["Format:Commander,Legality:Legal","Format:Modern,Legality:Legal","Format:Legacy,Legality:Legal","Format:Vintage,Legality:Legal"]</example>
+        </member>
+        <member name="T:ProxyAPI.Models.UploadIdentifier">
+            <summary>
+            An identifier for an uploaded decklist.
+            </summary>
+        </member>
+        <member name="F:ProxyAPI.Models.UploadIdentifier.Identifier">
+            <summary>
+            Unique card name.
+            </summary>
+            <example>"7643c6b9-8d7f-40ac-a327-81e166e12a9a"</example>
         </member>
     </members>
 </doc>

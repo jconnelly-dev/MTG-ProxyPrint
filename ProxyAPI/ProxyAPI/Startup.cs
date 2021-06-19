@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
@@ -85,6 +81,7 @@ namespace ProxyAPI
             {
                 ILogger<IMagicConsumer> logger = container.GetRequiredService<ILogger<IMagicConsumer>>();
                 IMagicConsumer singletonConsumer = new WizardsConsumer(
+                    downloadPath: singletonConfigs.DownloadPath,
                     apiDomain: singletonConfigs.ApiDomain,
                     apiVersion: singletonConfigs.ApiVersion,
                     apiResource: singletonConfigs.ApiResource,

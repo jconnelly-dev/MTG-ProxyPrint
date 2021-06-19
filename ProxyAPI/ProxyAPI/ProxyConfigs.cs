@@ -15,7 +15,7 @@ namespace ProxyAPI
 
         #region ProxyAPI Configurations.
         private static string _inputPathSingleton;
-        private string InputPath
+        public string InputPath
         {
             get
             {
