@@ -5,34 +5,32 @@ using System.Linq;
 using System.Threading.Tasks;
 using ProxyAPI.DTO;
 
-namespace ProxyAPI.Inputs
+namespace ProxyAPI.Parsers
 {
-    public class ProxyTextFile : IProxyRequest
+    public class ProxyTextFileParser : IProxyParser
     {
         #region Members.
-        private const string EXPECTED_FILE_FORMAT = "*.txt";
         private const int TEXT_MIN_FIELDS = 2;
         private const int MIN_SINGLE_CARD = 1;
         private const int MAX_SINGLE_CARD = 75;
+        private const string EXPECTED_FILE_FORMAT = "*.txt";
+
         private readonly List<FileInfo> _textFiles;
-        private readonly string _proxyPath;
         #endregion
 
         #region Contructors.
-        public ProxyTextFile(string basePath)
+        public ProxyTextFileParser(string path)
         {
-            if (string.IsNullOrEmpty(basePath) || string.IsNullOrWhiteSpace(basePath))
+            if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentException("Error: ProxyTextFile() Invalid Base Path.");
+                throw new ArgumentException("Error: ProxyTextFileParser() Invalid Base Path.");
             }
 
-            DirectoryInfo directory = new DirectoryInfo(basePath);
+            DirectoryInfo directory = new DirectoryInfo(path);
             if (directory == null || !directory.Exists)
             {
-                throw new FileNotFoundException("Error: ProxyTextFile() Proxy Directory Not Found.");
+                throw new FileNotFoundException("Error: ProxyTextFileParser() Proxy Directory Not Found.");
             }
-
-            _proxyPath = basePath;
 
             _textFiles = new List<FileInfo>();
             FileInfo[] files = directory.GetFiles(EXPECTED_FILE_FORMAT);
@@ -48,7 +46,7 @@ namespace ProxyAPI.Inputs
             }
             if (_textFiles == null || _textFiles.Count <= 0)
             {
-                throw new InvalidDataException("Error: ProxyTextFile() No Text Files Found.");
+                throw new InvalidDataException("Error: ProxyTextFileParser() No Text Files Found.");
             }
         }
         #endregion
@@ -73,20 +71,11 @@ namespace ProxyAPI.Inputs
                         string line;
                         while ((line = reader.ReadLine()) != null)
                         {
-                            int cardQnty = 0;
-                            string trimLine = line.Trim();
-                            string[] lineFields = (trimLine == null) ? null : trimLine.Split();
-                            if (lineFields != null && lineFields.Length >= TEXT_MIN_FIELDS &&
-                                int.TryParse(lineFields[0], out cardQnty) && cardQnty >= MIN_SINGLE_CARD && cardQnty <= MAX_SINGLE_CARD)
+                            SimpleCard card = ParseTextFileLine(line);
+                            if (card != null)
                             {
-                                // Remove card quantity field from text line for the card name.
-                                string cardName = trimLine.TrimStart(lineFields[0].ToCharArray()).Trim();
-
-                                if (!string.IsNullOrEmpty(cardName) && !string.IsNullOrWhiteSpace(cardName))
-                                {
-                                    deck.Cards.Add(new SimpleCard(cardName, cardQnty));
-                                }
-                            }
+                                deck.Cards.Add(card);
+                            }    
                         }
                     }
 
@@ -98,6 +87,39 @@ namespace ProxyAPI.Inputs
             }
 
             return decks;
+        }
+
+        private SimpleCard ParseTextFileLine(string line)
+        {
+            if (line == null)
+            {
+                return null;
+            }
+
+            SimpleCard parsedCard = null;
+
+            int cardQnty = 0;
+            string trimLine = line.Trim();
+            string[] lineFields = (trimLine == null) ? null : trimLine.Split();
+            if (lineFields != null && lineFields.Length >= TEXT_MIN_FIELDS)
+            {
+                if (int.TryParse(lineFields[0], out cardQnty) && cardQnty >= MIN_SINGLE_CARD && cardQnty <= MAX_SINGLE_CARD)
+                {
+                    // Remove card quantity field from text line so that the only remaining text is the card name.
+                    string cardName = trimLine.TrimStart(lineFields[0].ToCharArray()).Trim();
+
+                    if (!string.IsNullOrEmpty(cardName) && !string.IsNullOrWhiteSpace(cardName))
+                    {
+                        parsedCard = new SimpleCard(cardName, cardQnty);
+                    }
+                }
+                //else if (lineFields[0].Trim("x"))
+                //{
+
+                //}
+            }
+
+            return parsedCard;
         }
     }
 }

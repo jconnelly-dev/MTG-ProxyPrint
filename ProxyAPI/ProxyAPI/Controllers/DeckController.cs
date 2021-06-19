@@ -1,37 +1,39 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ProxyAPI.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
+using ProxyAPI.Authentication;
 using ProxyAPI.DTO;
 using ProxyAPI.Models;
+using MagicConsumer;
 
 namespace ProxyAPI.Controllers
 {
     /// <summary>
-    /// Provides API Web services for Magic the Gathering Proxies.
+    /// Provides API REST-based Web services for Magic the Gathering Deck Proxies.
     /// </summary>
     [Authorize]
     [AuthenticationFilter]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/{apiVersion:apiVersion}/[controller]")]
-    public class MagicProxyController : ControllerBase
+    public class DeckController : ControllerBase
     {
         #region Members.
         private readonly int _trackingId;
         private readonly ProxyConfigs _configs;
-        private readonly ILogger<MagicProxyController> _logger;
+        private readonly IMagicConsumer _consumer;
+        private readonly ILogger<DeckController> _logger;
         #endregion
 
         #region Contructors.
-        public MagicProxyController(ProxyConfigs configs, ILogger<MagicProxyController> logger)
+        public DeckController(ProxyConfigs configs, IMagicConsumer consumer, ILogger<DeckController> logger)
         {
             // Every request to this controller will have a sudo unique (random) trackingId.
             Random rand = new Random();
@@ -39,6 +41,7 @@ namespace ProxyAPI.Controllers
 
             _logger = logger;
             _configs = configs;
+            _consumer = consumer;
         }
         #endregion
 
@@ -52,7 +55,7 @@ namespace ProxyAPI.Controllers
         /// <response code="400">Unable to get blah... due to processing errors.</response>
         /// <response code="500">Unable to get blah... due to validation errors.</response>
         [HttpGet("card/{name:minlength(1)}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CardIdentifier))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CardDetails))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetCard([Required] string name)
@@ -67,11 +70,11 @@ namespace ProxyAPI.Controllers
                 return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: errMsg);
             }
 
-            CardIdentifier result = null;
+            CardDetails result = null;
 
             try
             {
-                result = new CardIdentifier();
+                result = new CardDetails();
                 result.Name = name;
             }
             catch (Exception ex)

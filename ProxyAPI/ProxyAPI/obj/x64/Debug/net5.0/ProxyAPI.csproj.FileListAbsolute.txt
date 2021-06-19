@@ -29,3 +29,7 @@ C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\obj\x64\Debug\net5.0
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\obj\x64\Debug\net5.0\ProxyAPI.xml
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\obj\x64\Debug\net5.0\ProxyAPI.pdb
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\obj\x64\Debug\net5.0\ProxyAPI.genruntimeconfig.cache
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\Newtonsoft.Json.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\MagicConsumer.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\MagicConsumer.pdb
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\obj\x64\Debug\net5.0\ProxyAPI.csproj.AssemblyReference.cache

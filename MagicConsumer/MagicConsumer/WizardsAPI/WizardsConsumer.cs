@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using MagicConsumer.WizardsAPI.DTO;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace MagicConsumer.WizardsAPI
@@ -11,164 +13,26 @@ namespace MagicConsumer.WizardsAPI
     public class WizardsConsumer : IMagicConsumer
     {
         #region Members.
-        public IConfiguration Configuration { get; private set; }
-        private readonly string _downloadPath;
-
-        private string _apiDomainSingleton;
-        public string ApiDomain
-        {
-            get
-            {
-                if (_apiDomainSingleton == null)
-                {
-                    const string configKey = "API-Domain";
-
-                    // TODO... nuget install System.Configuration... for now just define this w/static string like below...
-                    //string configValue = ConfigurationManager.AppSetting.Get(configKey);
-                    string configValue = @"https://api.magicthegathering.io";
-                    if (string.IsNullOrEmpty(configValue) || string.IsNullOrWhiteSpace(configValue))
-                    {
-                        throw new ArgumentException($"Error: Invalid {configKey} Config.");
-                    }
-
-                    _apiDomainSingleton = configValue;
-                }
-
-                return _apiDomainSingleton;
-            }
-        }
-
-        private string _apiResourceSingleton;
-        public string ApiResource
-        {
-            get
-            {
-                if (_apiResourceSingleton == null)
-                {
-                    const string configKey = "API-Resource";
-
-                    // TODO... nuget install System.Configuration... for now just define this w/static string like below...
-                    //string configValue = ConfigurationManager.AppSetting.Get(configKey);
-                    string configValue = @"cards";
-                    if (string.IsNullOrEmpty(configValue) || string.IsNullOrWhiteSpace(configValue))
-                    {
-                        throw new ArgumentException($"Error: Invalid {configKey} Config.");
-                    }
-
-                    _apiResourceSingleton = configValue;
-                }
-
-                return _apiResourceSingleton;
-            }
-        }
-
-        private string _apiVersionSingleton;
-        public string ApiVersion
-        {
-            get
-            {
-                if (_apiVersionSingleton == null)
-                {
-                    const string configKey = "API-Version";
-
-                    // TODO... nuget install System.Configuration... for now just define this w/static string like below...
-                    //string configValue = ConfigurationManager.AppSetting.Get(configKey);
-                    string configValue = "v1";
-                    if (string.IsNullOrEmpty(configValue) || string.IsNullOrWhiteSpace(configValue))
-                    {
-                        throw new ArgumentException($"Error: Invalid {configKey} Config.");
-                    }
-
-                    _apiVersionSingleton = configValue;
-                }
-
-                return _apiVersionSingleton;
-            }
-        }
-
-        private int? _timeoutSecondsSingleton;
-        public int TimeoutSeconds
-        {
-            get
-            {
-                if (_timeoutSecondsSingleton == null)
-                {
-                    const string configKey = "RequestTimeoutSeconds";
-
-                    // TODO... nuget install System.Configuration... for now just define this w/static string like below...
-                    //string configValue = ConfigurationManager.AppSetting.Get(configKey);
-                    string configValue = "3600";
-                    if (string.IsNullOrEmpty(configValue) || string.IsNullOrWhiteSpace(configValue))
-                    {
-                        throw new ArgumentException($"Error: Invalid {configKey} Config.");
-                    }
-
-                    int value;
-                    if (!int.TryParse(configValue, out value) || value <= 0)
-                    {
-                        throw new ArgumentException($"Error: Invalid {configKey} Number of Seconds.");
-                    }
-
-                    _timeoutSecondsSingleton = value;
-                }
-
-                return (int)_timeoutSecondsSingleton;
-            }
-        }
-
-        private string _apiBaseUrlSingleton;
-        public string ApiBaseUrl
-        {
-            get
-            {
-                if (_apiBaseUrlSingleton == null)
-                {
-                    const string configKey = "API-BaseUrl";
-
-                    _apiBaseUrlSingleton = $"{ApiDomain}/{ApiVersion}/{ApiResource}/";
-
-                    if (string.IsNullOrEmpty(_apiBaseUrlSingleton) || string.IsNullOrWhiteSpace(_apiBaseUrlSingleton))
-                    {
-                        throw new ArgumentException($"Error: Invalid {configKey} Composite Config.");
-                    }
-                }
-
-                return _apiBaseUrlSingleton;
-            }
-        }
+        private readonly string _apiBaseUrl;
+        private readonly string _apiDomain;
+        private readonly string _apiVersion;
+        private readonly string _apiResource;
+        private readonly int _apiRequestTimeout;
         #endregion
 
         #region Constructors.
-        public WizardsConsumer(string basePath)
+        public WizardsConsumer(string apiDomain, string apiVersion, string apiResource, int apiRequestTimeout)
         {
-            //IConfigurationBuilder builder = new ConfigurationBuilder();
-            //builder.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json"));
-            //var root = bulider.Build();
-            //https://stackoverflow.com/questions/46940710/getting-value-from-appsettings-json-in-net-core
-            //https://stackoverflow.com/questions/38398022/access-from-class-library-to-appsetting-json-in-asp-net-core
-            //var sampleConnectionString = root.GetConnectionString("your-connection-string");
-            if (string.IsNullOrEmpty(basePath) || string.IsNullOrWhiteSpace(basePath))
-            {
-                throw new ArgumentException("Error: WizardsAPI() Invalid Base Path.");
-            }
+            _apiDomain = apiDomain;
+            _apiResource = apiResource;
+            _apiVersion = apiVersion;
+            _apiRequestTimeout = apiRequestTimeout;
 
-            DirectoryInfo directory = new DirectoryInfo(basePath);
-            if (directory == null || !directory.Exists)
-            {
-                throw new FileNotFoundException("Error: WizardsAPI() Proxy Directory Not Found.");
-            }
+            _apiBaseUrl = $"{_apiDomain}/{apiVersion}/{apiResource}";
 
-            _downloadPath = basePath;
-
-            // Pull and log config values.
-            Console.WriteLine($"ApiDomain={ApiDomain}");
-            Console.WriteLine($"ApiVersion={ApiVersion}");
-            Console.WriteLine($"TimeoutSeconds={TimeoutSeconds}");
-            Console.WriteLine($"ApiBaseUrl={ApiBaseUrl}");
-
-            //ServicePointManager.Expect100Continue = true;
-            //ServicePointManager.DefaultConnectionLimit = 9999;
-            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.DefaultConnectionLimit = 9999;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
             ValidateSimpleRequest();
         }
@@ -177,13 +41,15 @@ namespace MagicConsumer.WizardsAPI
         {
             const int narsetEnlightenedMasterId = 386616;
 
-            MagicCardDTO card = GetCard(narsetEnlightenedMasterId.ToString());
+            MagicCardDTO card = GetCard(narsetEnlightenedMasterId);
             if (card == null)
             {
                 throw new HttpRequestException("Error: ValidateSimpleRequest() Simple Card Request Failed.");
             }
 
-            string cardPath = DownloadImage(card);
+            string workingDirectory = Environment.CurrentDirectory;
+            string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
+            string cardPath = DownloadImage(card, projectDirectory);
             if (!File.Exists(cardPath))
             {
                 throw new HttpRequestException("Error: ValidateSimpleRequest() Simple Image Request Failed.");
@@ -193,16 +59,17 @@ namespace MagicConsumer.WizardsAPI
         }
         #endregion
 
-        private MagicCardDTO GetCard(string cardName)
+        public MagicCardDTO GetCard(int multiverseId)
         {
             MagicCardDTO card = null;
 
-            // TODO this needs to change from an int, to a card name string...
-            string url = ApiBaseUrl + cardName;
+            // DEBUG: https://api.magicthegathering.io/v1/cards/386615
+
+            string url = $"{_apiBaseUrl}/{multiverseId}";
             string contentType = "application/json";
             using (HttpClient client = new HttpClient())
             {
-                client.Timeout = new TimeSpan(0, 0, TimeoutSeconds);
+                client.Timeout = new TimeSpan(0, 0, _apiRequestTimeout);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
                 using (var response = client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).Result) // forcing sync
                 {
@@ -223,14 +90,47 @@ namespace MagicConsumer.WizardsAPI
             return card;
         }
 
-        private string DownloadImage(MagicCardDTO card)
+        public List<MagicCardDTO> GetCards(string cardName)
         {
-            if (card == null || string.IsNullOrEmpty(card.name) || string.IsNullOrEmpty(card.imageUrl) || string.IsNullOrEmpty(_downloadPath))
+            List<MagicCardDTO> card = null; // all versions of the card associated w/specified name.
+
+            // DEBUG: https://api.magicthegathering.io/v1/cards?name="Archangel%20Avacyn"
+
+            string htmlCardName = cardName.Trim().Replace(" ", "%20");
+
+            string url = $"{_apiBaseUrl}?name=\"{cardName}\"";
+            string contentType = "application/json";
+            using (HttpClient client = new HttpClient())
+            {
+                client.Timeout = new TimeSpan(0, 0, _apiRequestTimeout);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
+                using (var response = client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).Result) // forcing sync
+                {
+                    response.EnsureSuccessStatusCode();
+
+                    string jsonString = response.Content.ReadAsStringAsync().Result; // forcing sync
+                    if (!string.IsNullOrEmpty(jsonString))
+                    {
+                        MagicCardsResponse content = JsonConvert.DeserializeObject<MagicCardsResponse>(jsonString);
+                        if (content != null && content.cards != null && content.cards.Length > 0)
+                        {
+                            card = content.cards.ToList<MagicCardDTO>();
+                        }
+                    }
+                }
+            }
+
+            return card;
+        }
+
+        private string DownloadImage(MagicCardDTO card, string downloadPath)
+        {
+            if (card == null || string.IsNullOrEmpty(card.name) || string.IsNullOrEmpty(card.imageUrl) || string.IsNullOrEmpty(downloadPath))
             {
                 return null;
             }
 
-            string cardPath = $"{_downloadPath}/{card.name}.png";
+            string cardPath = $"{downloadPath}/{card.name}.png";
             if (File.Exists(cardPath))
             {
                 File.Delete(cardPath);
@@ -239,7 +139,7 @@ namespace MagicConsumer.WizardsAPI
             string contentType = "application/json";
             using (HttpClient client = new HttpClient())
             {
-                client.Timeout = new TimeSpan(0, 0, TimeoutSeconds);
+                client.Timeout = new TimeSpan(0, 0, _apiRequestTimeout);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
                 using (Stream output = File.OpenWrite(cardPath))
                 using (Stream input = client.GetStreamAsync(card.imageUrl).Result) // forcing sync

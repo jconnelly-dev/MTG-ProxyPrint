@@ -21,6 +21,7 @@ namespace MagicConsumer.WizardsAPI.DTO
         public string set;
         public string setName;
         public string text;
+        public string flavor;
         public string artist;
         public string number;
         public string power;

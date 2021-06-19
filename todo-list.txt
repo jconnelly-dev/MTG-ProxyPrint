@@ -23,3 +23,26 @@ build remaining endpoints for ->
 	// Create proxies.
 	IProxyBuilder builder = new PDFProxyBuilder(OutputPath);
 	builder.Build(cardImages);
+
+
+----------------------------------------------
+
+
+POST
+// upload a file and save to a directory. then have parser build SimpleDeck from file. then pass to consumer to get ProxyDecks. then have builder Get + download all card images to that same directory.
+// return any errors, warnings, or cards that were not found in return object...
+// return an UploadIdentifier for the saved file (decklist) & card image(s) (NOTE: UploadIdentifier is mapped internally to the pathing where the file & images were saved).
+UploadDecklist
+
+DELETE
+// given a UploadIdentifier (a.k.a. directory path were file(s) + image(s) are saved) delete any associated decklist file and card images.
+// return bool true or false, purposely don't give a lot of info back ***MAYBE??? read what's the best strategy here***
+DeleteDeckList
+
+GET
+// given a UploadIdentifier (a.k.a. directory path were file(s) + image(s) are saved), return 
+// return list of simple deck lists including card name/quantity, no images or api info yet.
+GetProxiedDeckList
+
+GET
+GetDeckListCardDetails

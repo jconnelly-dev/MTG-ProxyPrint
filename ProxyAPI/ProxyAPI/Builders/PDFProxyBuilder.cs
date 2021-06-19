@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ProxyAPI.DTO;
 
-namespace ProxyAPI.Outputs
+namespace ProxyAPI.Builders
 {
     public class PDFProxyBuilder : IProxyBuilder
     {

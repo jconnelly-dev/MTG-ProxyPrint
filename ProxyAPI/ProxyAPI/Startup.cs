@@ -1,20 +1,22 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using ProxyAPI.Authentication;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
+using ProxyAPI.Authentication;
+using MagicConsumer;
+using MagicConsumer.WizardsAPI;
 
 namespace ProxyAPI
 {
@@ -69,21 +71,26 @@ namespace ProxyAPI
                 config.ApiVersionReader = new UrlSegmentApiVersionReader();
             });
 
-            // Through dependency injection, instantiate a singleton of our configs and pass to each service (i.e. each controller).
+            // Through dependency injection, instantiate a singleton of our API configs and pass to each service (i.e. each controller).
+            ProxyConfigs singletonConfigs = null;
             services.AddSingleton<ProxyConfigs>((container) =>
             {
                 ILogger<ProxyConfigs> logger = container.GetRequiredService<ILogger<ProxyConfigs>>();
-                ProxyConfigs singletonConfigs = new ProxyConfigs(Configuration, logger, _apiName, _apiVersion, Environment.MachineName);
+                singletonConfigs = new ProxyConfigs(Configuration, logger, _apiName, _apiVersion, Environment.MachineName);
                 return singletonConfigs;
             });
 
-            // TODO: Add singleton of our MagicConsumerContext to all controllers through dependency injection.
-            //services.AddSingleton<MTGContext>((container) =>
-            //{
-            //    ILogger<MTGContext> logger = container.GetRequiredService<ILogger<MTGContext>>();
-            //    MTGContext singletonContext = new MTGContext(DownloadPath);
-            //    return singletonConfigs;
-            //});
+            // Add singleton of our consumer (of external magic APIs) to all controllers through dependency injection.
+            services.AddSingleton<IMagicConsumer>((container) =>
+            {
+                ILogger<IMagicConsumer> logger = container.GetRequiredService<ILogger<IMagicConsumer>>();
+                IMagicConsumer singletonConsumer = new WizardsConsumer(
+                    apiDomain: singletonConfigs.ApiDomain,
+                    apiVersion: singletonConfigs.ApiVersion,
+                    apiResource: singletonConfigs.ApiResource,
+                    apiRequestTimeout: singletonConfigs.ApiRequestTimeout);
+                return singletonConsumer;
+            });
         }
 
         /*

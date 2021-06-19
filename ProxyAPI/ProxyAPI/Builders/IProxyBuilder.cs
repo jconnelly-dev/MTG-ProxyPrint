@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using ProxyAPI.DTO;
 
-namespace ProxyAPI.Inputs
+namespace ProxyAPI.Builders
 {
-    public interface IProxyRequest
+    public interface IProxyBuilder
     {
-        public List<SimpleDeck> CollectDeckLists();
+        public bool Build(List<ProxyDeck> decks);
     }
 }

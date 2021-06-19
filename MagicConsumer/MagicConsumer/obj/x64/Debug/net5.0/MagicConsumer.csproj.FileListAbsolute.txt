@@ -2,7 +2,6 @@ C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicConsumer\MagicConsumer\bin\x64\De
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicConsumer\MagicConsumer\bin\x64\Debug\net5.0\MagicConsumer.dll
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicConsumer\MagicConsumer\bin\x64\Debug\net5.0\ref\MagicConsumer.dll
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicConsumer\MagicConsumer\bin\x64\Debug\net5.0\MagicConsumer.pdb
-C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicConsumer\MagicConsumer\obj\x64\Debug\net5.0\MagicConsumer.csproj.AssemblyReference.cache
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicConsumer\MagicConsumer\obj\x64\Debug\net5.0\MagicConsumer.GeneratedMSBuildEditorConfig.editorconfig
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicConsumer\MagicConsumer\obj\x64\Debug\net5.0\MagicConsumer.AssemblyInfoInputs.cache
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\MagicConsumer\MagicConsumer\obj\x64\Debug\net5.0\MagicConsumer.AssemblyInfo.cs
