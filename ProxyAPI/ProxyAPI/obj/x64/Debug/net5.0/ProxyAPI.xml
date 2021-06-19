@@ -46,13 +46,17 @@
         </member>
         <member name="M:ProxyAPI.Controllers.DeckController.UploadDecklist(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
-            Upload file containing deck list. Valid file line's begin w/a numeric, followed by whitespace, followed by the card name. i.e. "4 Liliana of the Veil".
+            Upload text file containing deck list.
             </summary>
             <returns>UploadIdentifier</returns>
+            <format>(card_quantity)(white_space)(card_name)</format>
+            <format_ex1>4 Ponder</format_ex1>
+            <format_ex2>2 Lightning Bolt</format_ex2>
+            <format_ex3>10 Swamp</format_ex3>
             <example>POST: /api/1.0/deck</example>
             <response code="200">Success</response>
-            <response code="400">Unable to get Upload file due to processing errors.</response>
-            <response code="500">Unable to get Upload file due to validation errors.</response>
+            <response code="400">Unable to get Upload File due to processing errors.</response>
+            <response code="500">Unable to get Upload File due to validation errors.</response>
         </member>
         <member name="T:ProxyAPI.Models.CardDetails">
             <summary>
@@ -211,12 +215,12 @@
         </member>
         <member name="T:ProxyAPI.Models.UploadIdentifier">
             <summary>
-            An identifier for an uploaded decklist.
+            A unique identifier associated w/a decklist that has been uploaded.
             </summary>
         </member>
-        <member name="F:ProxyAPI.Models.UploadIdentifier.Identifier">
+        <member name="P:ProxyAPI.Models.UploadIdentifier.Identifier">
             <summary>
-            Unique card name.
+            Unique identifier.
             </summary>
             <example>"7643c6b9-8d7f-40ac-a327-81e166e12a9a"</example>
         </member>
