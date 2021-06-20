@@ -10,10 +10,12 @@ namespace ProxyAPI.Parsers
     public class ProxyTextFileParser : IProxyParser
     {
         #region Members.
-        private const int TEXT_MIN_FIELDS = 2;
-        private const int MIN_SINGLE_CARD = 1;
-        private const int MAX_SINGLE_CARD = 75;
+        private const int MIN_LINE_FIELDS = 2;
+        private const int MIN_SINGLE_CARD_QNTY = 1;
+        private const int MAX_SINGLE_CARD_QNTY = 75;
         private const string EXPECTED_FILE_FORMAT = "*.txt";
+
+        private static char[] _acceptedTrailingChars = new char[] { 'x', ',' };
 
         private readonly List<FileInfo> _textFiles;
         #endregion
@@ -89,37 +91,61 @@ namespace ProxyAPI.Parsers
             return decks;
         }
 
-        private SimpleCard ParseTextFileLine(string line)
+        public static SimpleCard ParseLine(string line, out string validLine)
         {
-            if (line == null)
+            validLine = null;
+            SimpleCard result = null;
+            if (string.IsNullOrEmpty(line) || string.IsNullOrWhiteSpace(line))
             {
-                return null;
+                return result;
             }
 
-            SimpleCard parsedCard = null;
-
-            int cardQnty = 0;
             string trimLine = line.Trim();
-            string[] lineFields = (trimLine == null) ? null : trimLine.Split();
-            if (lineFields != null && lineFields.Length >= TEXT_MIN_FIELDS)
+            if (trimLine != null)
             {
-                if (int.TryParse(lineFields[0], out cardQnty) && cardQnty >= MIN_SINGLE_CARD && cardQnty <= MAX_SINGLE_CARD)
+                string[] lineFields = trimLine.Split();
+                if (lineFields != null && lineFields.Length >= MIN_LINE_FIELDS)
                 {
-                    // Remove card quantity field from text line so that the only remaining text is the card name.
-                    string cardName = trimLine.TrimStart(lineFields[0].ToCharArray()).Trim();
-
-                    if (!string.IsNullOrEmpty(cardName) && !string.IsNullOrWhiteSpace(cardName))
+                    if (lineFields[0] != null && lineFields[0].All(char.IsDigit))
                     {
-                        parsedCard = new SimpleCard(cardName, cardQnty);
+                        int cardQnty = 0;
+
+                        // Valid line will either: begin with a numeric value.
+                        if (!int.TryParse(lineFields[0], out cardQnty))
+                        {
+                            // or will being with a numberic value concated w/an accepted trailing character like 'x'... i.e. "4x"
+                            foreach (char tailChar in _acceptedTrailingChars)
+                            {
+                                string trimTrailing = lineFields[0].TrimEnd(tailChar);
+                                if (!string.IsNullOrEmpty(trimTrailing) && int.TryParse(trimTrailing, out cardQnty))
+                                {
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (cardQnty >= MIN_SINGLE_CARD_QNTY && cardQnty <= MAX_SINGLE_CARD_QNTY)
+                        {
+                            // Remove card quantity field from text line so that the only remaining text is the card name.
+                            string cardName = trimLine.TrimStart(lineFields[0].ToCharArray()).Trim();
+
+                            if (!string.IsNullOrEmpty(cardName) && !string.IsNullOrWhiteSpace(cardName))
+                            {
+                                validLine = $"{cardQnty} {cardName}";
+                                result = new SimpleCard(cardName, cardQnty);
+                            }
+                        }
                     }
                 }
-                //else if (lineFields[0].Trim("x"))
-                //{
-
-                //}
             }
 
-            return parsedCard;
+            return result;
+        }
+
+        private static SimpleCard ParseTextFileLine(string line)
+        {
+            string notUsedInThisOverloadMethod;
+            return ParseLine(line, out notUsedInThisOverloadMethod);
         }
     }
 }

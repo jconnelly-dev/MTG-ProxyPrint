@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
-using ProxyAPI.Authentication;
+using ProxyAPI.Security;
 using ProxyAPI.DTO;
 using ProxyAPI.Models;
 using MagicConsumer;
@@ -16,6 +16,7 @@ using MagicConsumer.WizardsAPI;
 using MagicConsumer.WizardsAPI.DTO;
 using System.IO;
 using System.Text;
+using ProxyAPI.Parsers;
 
 namespace ProxyAPI.Controllers
 {
@@ -65,6 +66,7 @@ namespace ProxyAPI.Controllers
         /// <response code="400">Unable to get Upload File due to processing errors.</response>
         /// <response code="500">Unable to get Upload File due to validation errors.</response>
         [HttpPost()]
+        [FileUploadSecurityValidation()]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UploadIdentifier))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -80,25 +82,12 @@ namespace ProxyAPI.Controllers
                 return Problem(statusCode: StatusCodes.Status400BadRequest, detail: errMsg);
             }
 
-            // NOTE: I'll make this all into an Attribute later when I go through clean-up process.
-            // MIME Sniffing standards should be used here to enforce a bunch of security concerns w/reading in a file from the request.
-            string[] allowedFileTypes = new string[]
-            {
-                "text/plain"
-            };
-            if (decklist.Length <= 0 || decklist.ContentType == null || !allowedFileTypes.Contains(decklist.ContentType))
-            {
-                string errMsg = "Status 400 Bad Request: Invalid Request.";
-                _logger.Log(LogLevel.Error, eventId, errMsg);
-                return Problem(statusCode: StatusCodes.Status400BadRequest, detail: errMsg);
-            }
-
             UploadIdentifier result = null;
 
             try
             {
                 string guid = null;
-                string decklistPath = null;
+                string uploadDeckPath = null;
 
                 // Create a new/unique directory for this request that will store the decklist text file and all downloaded card images.
                 int currAttempt = 1;
@@ -107,11 +96,11 @@ namespace ProxyAPI.Controllers
                 do
                 {
                     guid = Guid.NewGuid().ToString();
-                    decklistPath = Path.Combine(_configs.InputPath, guid);
-                    if (!Directory.Exists(decklistPath))
+                    uploadDeckPath = Path.Combine(_configs.InputPath, guid);
+                    if (!Directory.Exists(uploadDeckPath))
                     {
-                        Directory.CreateDirectory(decklistPath);
-                        if (Directory.Exists(decklistPath))
+                        Directory.CreateDirectory(uploadDeckPath);
+                        if (Directory.Exists(uploadDeckPath))
                         {
                             uploadPathExists = true;
                             break;
@@ -120,24 +109,50 @@ namespace ProxyAPI.Controllers
                     currAttempt++;
                 }
                 while (currAttempt <= maxAttempts);
-                if (!uploadPathExists || string.IsNullOrEmpty(guid) || string.IsNullOrEmpty(decklistPath))
+                if (!uploadPathExists || string.IsNullOrEmpty(guid) || string.IsNullOrEmpty(uploadDeckPath))
                 {
-                    string errMsg = $"Status 500 Internal Server Error. Unable to Find Upload Decklist Pathing.";
+                    string errMsg = $"Status 500 Internal Server Error. Unable to Find Upload Pathing.";
                     _logger.Log(LogLevel.Error, eventId, errMsg);
                     return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: errMsg);
                 }
 
-                // Inside new request directory, create a file and synchronously copy to it the plain text contents from the request body file.
-                string decklistFilePath = Path.Combine(decklistPath, DECKLIST_FILENAME);
-                bool validCopy = SyncCopyValidPlainTextFileToFile(decklist, decklistFilePath);
+                // Open request body file, parse, validate, synchronously copy to new text file, then return valid cotent in a SimpleDeck.
+                string decklistFilePath = Path.Combine(uploadDeckPath, DECKLIST_FILENAME);
+                SimpleDeck parsedDeck = ProcessPlainTextDecklistFile(decklist, decklistFilePath, guid);
 
-                // Determine if file was uploaded successfully.
-                if (!validCopy || !System.IO.File.Exists(decklistFilePath))
+                // Determine if file was uploaded and parsed successfully.
+                if (parsedDeck == null || parsedDeck.Cards == null || parsedDeck.Cards.Count <= 0 || !System.IO.File.Exists(decklistFilePath))
                 {
-                    string errMsg = $"Status 500 Internal Server Error. Failed to Upload Decklist Text File.";
+                    string errMsg = $"Status 500 Internal Server Error. Failed to Parse Decklist.";
                     _logger.Log(LogLevel.Error, eventId, errMsg);
                     return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: errMsg);
                 }
+
+                // Download each card image found in the parsed deck list.
+                foreach (SimpleCard card in parsedDeck.Cards)
+                {
+                    List<MagicCardDTO> cardVersions = _consumer.GetCards(card.Name);
+                    foreach (MagicCardDTO cardVersion in cardVersions)
+                    {
+                        if (cardVersion != null)
+                        {
+                            string downloadImagePath = _consumer.DownloadCardImage(cardVersion, uploadDeckPath);
+                            if (!string.IsNullOrEmpty(downloadImagePath))
+                            {
+                                // blah...
+                            }
+                        }
+                    }
+                }
+                
+                //IProxyParser parser = new ProxyTextFileParser(decklistFilePath);
+                //List<SimpleDeck> simpleDecks = parser.CollectDeckLists();
+                //if (simpleDecks == null || simpleDecks.Count <= 0)
+                //{
+                //    string errMsg = $"Status 400 Bad Request. Unable to Parse Uploaded Decklist.";
+                //    _logger.Log(LogLevel.Warning, eventId, errMsg);
+                //    return Problem(statusCode: StatusCodes.Status400BadRequest, detail: errMsg);
+                //}
 
                 result = new UploadIdentifier(guid);
             }
@@ -151,8 +166,8 @@ namespace ProxyAPI.Controllers
         }
         #endregion
 
-
-        private void SyncCopyFullPlainTextFileToFile(IFormFile decklist, string decklistFilePath)
+        #region Shared Controller Methods.
+        private static void SyncCopyFullPlainTextFileToFile(IFormFile decklist, string decklistFilePath)
         {
             /*
              * NOTE: this function is no longer used, but was the original strategy used by this API.
@@ -167,9 +182,9 @@ namespace ProxyAPI.Controllers
             }
         }
 
-        private bool SyncCopyValidPlainTextFileToFile(IFormFile decklist, string decklistFilePath)
+        private SimpleDeck ProcessPlainTextDecklistFile(IFormFile decklist, string decklistFilePath, string guid)
         {
-            bool valid = false;
+            SimpleDeck result = new SimpleDeck(guid);
 
             string line = null;
             using (Stream stream = decklist.OpenReadStream())
@@ -178,21 +193,22 @@ namespace ProxyAPI.Controllers
             {
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (!string.IsNullOrEmpty(line) && !string.IsNullOrWhiteSpace(line))
+                    string validLine;
+                    SimpleCard card = ProxyTextFileParser.ParseLine(line, out validLine);
+                    if (card != null && validLine != null)
                     {
-                        string trimmedLine = line.Trim();
-
-                        // Check to see if the first character of the current plain text line is a digit.
-                        if (!string.IsNullOrWhiteSpace(trimmedLine) && char.IsDigit(trimmedLine[0]))
-                        {
-                            writer.WriteLine(trimmedLine);
-                            valid = true;
-                        }
+                        result.Cards.Add(card);
+                        writer.WriteLine(validLine);
                     }
                 }
             }
+            if (result.Cards == null || result.Cards.Count <= 0)
+            {
+                result = null;
+            }
 
-            return valid;
+            return result;
         }
+        #endregion
     }
 }

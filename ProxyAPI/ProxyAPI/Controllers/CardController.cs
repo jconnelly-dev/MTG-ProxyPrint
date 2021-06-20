@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ProxyAPI.Authentication;
+using ProxyAPI.Security;
 using ProxyAPI.Models;
 using MagicConsumer;
 using MagicConsumer.WizardsAPI;
@@ -234,7 +234,7 @@ namespace ProxyAPI.Controllers
         #endregion
 
         #region Shared Controller Methods.
-        private CardDetails MapInternalToExternal(MagicCardDTO dto)
+        private static CardDetails MapInternalToExternal(MagicCardDTO dto)
         {
             CardDetails result = null;
             if (dto != null)

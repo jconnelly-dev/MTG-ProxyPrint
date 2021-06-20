@@ -10,9 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using ProxyAPI.Authentication;
+using ProxyAPI.Security;
 using MagicConsumer;
 using MagicConsumer.WizardsAPI;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace ProxyAPI
 {
@@ -47,6 +48,12 @@ namespace ProxyAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            // Set the file upload size limit to an absolute max of 256 MB.
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 268435456;
+            });
 
             services.AddSwaggerGen(config =>
             {

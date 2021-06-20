@@ -42,7 +42,7 @@ namespace MagicConsumer.WizardsAPI
                 throw new HttpRequestException("Error: ValidateSimpleRequest() Simple Card Request Failed.");
             }
 
-            string cardPath = DownloadImage(card);
+            string cardPath = DownloadCardImage(card, _downloadPath);
             if (!File.Exists(cardPath))
             {
                 throw new HttpRequestException("Error: ValidateSimpleRequest() Simple Image Request Failed.");
@@ -150,14 +150,14 @@ namespace MagicConsumer.WizardsAPI
             return card;
         }
 
-        private string DownloadImage(MagicCardDTO card)
+        public string DownloadCardImage(MagicCardDTO card, string downloadPath)
         {
-            if (card == null || string.IsNullOrEmpty(card.name) || string.IsNullOrEmpty(card.imageUrl))
+            if (card == null || string.IsNullOrEmpty(card.name) || string.IsNullOrEmpty(card.imageUrl) || string.IsNullOrEmpty(downloadPath))
             {
                 return null;
             }
 
-            string cardPath = $"{_downloadPath}/{card.multiverseid}.png";
+            string cardPath = $"{downloadPath}/{card.multiverseid}.png";
             if (File.Exists(cardPath))
             {
                 File.Delete(cardPath);
