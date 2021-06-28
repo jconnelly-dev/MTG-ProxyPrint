@@ -23,7 +23,6 @@ namespace ProxyAPI.Controllers
     /// <summary>
     /// Provides API REST-based Web services for Magic the Gathering Deck Proxies.
     /// </summary>
-    [Authorize]
     [AuthenticationFilter]
     [ApiController]
     [ApiVersion("1.0")]
@@ -34,13 +33,13 @@ namespace ProxyAPI.Controllers
         const string DECKLIST_FILENAME = "decklist.txt";
 
         private readonly int _trackingId;
-        private readonly ProxyConfigs _configs;
+        private readonly AppOptions _configs;
         private readonly WizardsConsumer _consumer;
         private readonly ILogger<DeckController> _logger;
         #endregion
 
         #region Contructors.
-        public DeckController(ProxyConfigs configs, IMagicConsumer consumer, ILogger<DeckController> logger)
+        public DeckController(ILogger<DeckController> logger, IMagicConsumer consumer, AppOptions configs)
         {
             // Every request to this controller will have a sudo unique (random) trackingId.
             Random rand = new Random();
@@ -53,6 +52,7 @@ namespace ProxyAPI.Controllers
         #endregion
 
         #region Web API Endpoints.
+
         /// <summary>
         /// Upload text file containing deck list.
         /// </summary>
@@ -66,11 +66,10 @@ namespace ProxyAPI.Controllers
         /// <response code="400">Unable to get Upload File due to processing errors.</response>
         /// <response code="500">Unable to get Upload File due to validation errors.</response>
         [HttpPost()]
-        [FileUploadSecurityValidation()]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UploadIdentifier))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UploadDecklist([Required] IFormFile decklist)
+        public IActionResult UploadDecklist([Required][FileUploadSecurityValidation] IFormFile decklist)
         {
             EventId eventId = new EventId(_trackingId, "UploadDecklist()");
             _logger.Log(LogLevel.Information, eventId, "Processing");
@@ -86,41 +85,21 @@ namespace ProxyAPI.Controllers
 
             try
             {
-                string guid = null;
-                string uploadDeckPath = null;
+                string deckGuid;
+                string deckStoragePath;
 
                 // Create a new/unique directory for this request that will store the decklist text file and all downloaded card images.
-                int currAttempt = 1;
-                int maxAttempts = 5;
-                bool uploadPathExists = false;
-                do
+                bool uploadPathExists = InitializeDecklistStorage(out deckGuid, out deckStoragePath);
+                if (!uploadPathExists || string.IsNullOrEmpty(deckGuid) || string.IsNullOrEmpty(deckStoragePath))
                 {
-                    guid = Guid.NewGuid().ToString();
-                    uploadDeckPath = Path.Combine(_configs.InputPath, guid);
-                    if (!Directory.Exists(uploadDeckPath))
-                    {
-                        Directory.CreateDirectory(uploadDeckPath);
-                        if (Directory.Exists(uploadDeckPath))
-                        {
-                            uploadPathExists = true;
-                            break;
-                        }
-                    }
-                    currAttempt++;
-                }
-                while (currAttempt <= maxAttempts);
-                if (!uploadPathExists || string.IsNullOrEmpty(guid) || string.IsNullOrEmpty(uploadDeckPath))
-                {
-                    string errMsg = $"Status 500 Internal Server Error. Unable to Find Upload Pathing.";
+                    string errMsg = $"Status 500 Internal Server Error. Unable to Initialize Upload.";
                     _logger.Log(LogLevel.Error, eventId, errMsg);
                     return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: errMsg);
                 }
 
                 // Open request body file, parse, validate, synchronously copy to new text file, then return valid cotent in a SimpleDeck.
-                string decklistFilePath = Path.Combine(uploadDeckPath, DECKLIST_FILENAME);
-                SimpleDeck parsedDeck = ProcessPlainTextDecklistFile(decklist, decklistFilePath, guid);
-
-                // Determine if file was uploaded and parsed successfully.
+                string decklistFilePath = Path.Combine(deckStoragePath, DECKLIST_FILENAME);
+                SimpleDeck parsedDeck = ProcessPlainTextDecklistFile(decklist, decklistFilePath, deckGuid);
                 if (parsedDeck == null || parsedDeck.Cards == null || parsedDeck.Cards.Count <= 0 || !System.IO.File.Exists(decklistFilePath))
                 {
                     string errMsg = $"Status 500 Internal Server Error. Failed to Parse Decklist.";
@@ -128,33 +107,23 @@ namespace ProxyAPI.Controllers
                     return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: errMsg);
                 }
 
-                // Download each card image found in the parsed deck list.
-                foreach (SimpleCard card in parsedDeck.Cards)
+                // Download each card image in the parsed deck list.
+                Parallel.ForEach(parsedDeck.Cards, card =>
                 {
                     List<MagicCardDTO> cardVersions = _consumer.GetCards(card.Name);
                     foreach (MagicCardDTO cardVersion in cardVersions)
                     {
                         if (cardVersion != null)
                         {
-                            string downloadImagePath = _consumer.DownloadCardImage(cardVersion, uploadDeckPath);
-                            if (!string.IsNullOrEmpty(downloadImagePath))
-                            {
-                                // blah...
-                            }
+                            _consumer.DownloadCardImage(cardVersion, deckStoragePath);
                         }
                     }
-                }
-                
-                //IProxyParser parser = new ProxyTextFileParser(decklistFilePath);
-                //List<SimpleDeck> simpleDecks = parser.CollectDeckLists();
-                //if (simpleDecks == null || simpleDecks.Count <= 0)
-                //{
-                //    string errMsg = $"Status 400 Bad Request. Unable to Parse Uploaded Decklist.";
-                //    _logger.Log(LogLevel.Warning, eventId, errMsg);
-                //    return Problem(statusCode: StatusCodes.Status400BadRequest, detail: errMsg);
-                //}
+                });
 
-                result = new UploadIdentifier(guid);
+                // Check to see which cards if any were not downloaded and return success w/warning.
+                // TODO...
+
+                result = new UploadIdentifier(deckGuid);
             }
             catch (Exception ex)
             {
@@ -167,6 +136,32 @@ namespace ProxyAPI.Controllers
         #endregion
 
         #region Shared Controller Methods.
+        private bool InitializeDecklistStorage(out string storageId, out string storagePath)
+        {
+            bool success = false;
+
+            int currAttempt = 1;
+            int maxAttempts = 5;
+            do
+            {
+                storageId = Guid.NewGuid().ToString();
+                storagePath = Path.Combine(_configs.InputPath, storageId);
+                if (!Directory.Exists(storagePath))
+                {
+                    Directory.CreateDirectory(storagePath);
+                    if (Directory.Exists(storagePath))
+                    {
+                        success = true;
+                        break;
+                    }
+                }
+                currAttempt++;
+            }
+            while (currAttempt <= maxAttempts);
+
+            return success;
+        }
+
         private static void SyncCopyFullPlainTextFileToFile(IFormFile decklist, string decklistFilePath)
         {
             /*
@@ -186,7 +181,7 @@ namespace ProxyAPI.Controllers
         {
             SimpleDeck result = new SimpleDeck(guid);
 
-            string line = null;
+            string line;
             using (Stream stream = decklist.OpenReadStream())
             using (StreamReader reader = new StreamReader(stream))
             using (StreamWriter writer = new StreamWriter(decklistFilePath))
@@ -201,10 +196,6 @@ namespace ProxyAPI.Controllers
                         writer.WriteLine(validLine);
                     }
                 }
-            }
-            if (result.Cards == null || result.Cards.Count <= 0)
-            {
-                result = null;
             }
 
             return result;

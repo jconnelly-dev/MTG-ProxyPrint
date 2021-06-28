@@ -1,0 +1,139 @@
+2021-06-27 16:21:11.700 -06:00 [Verbose] Verbose
+2021-06-27 16:21:11.779 -06:00 [Debug] Debug
+2021-06-27 16:21:11.779 -06:00 [Information] Information
+2021-06-27 16:21:11.779 -06:00 [Warning] Warning
+2021-06-27 16:21:11.779 -06:00 [Error] Error
+2021-06-27 16:21:11.780 -06:00 [Fatal] Fatal
+2021-06-27 16:21:11.780 -06:00 [Verbose] 2Verbose
+2021-06-27 16:21:11.780 -06:00 [Debug] 2Debug
+2021-06-27 16:21:11.780 -06:00 [Information] 2Information
+2021-06-27 16:21:11.780 -06:00 [Warning] 2Warning
+2021-06-27 16:21:11.780 -06:00 [Error] 2Error
+2021-06-27 16:21:11.780 -06:00 [Fatal] 2Fatal
+2021-06-27 16:21:11.780 -06:00 [Information] --------------------------------------------------
+2021-06-27 16:21:11.780 -06:00 [Information] Initializing API...
+2021-06-27 16:21:11.781 -06:00 [Information] ProjectName=ProxyAPI
+2021-06-27 16:21:11.781 -06:00 [Information] ProjectVersion=1.0
+2021-06-27 16:21:11.781 -06:00 [Information] MachineName=DELL-FFZ35Y2
+2021-06-27 16:21:11.781 -06:00 [Information] EnvironmentName=Development
+2021-06-27 16:21:11.782 -06:00 [Information] SolutionProfile=DEBUG
+2021-06-27 16:21:11.782 -06:00 [Information] Application Configurations ->
+2021-06-27 16:21:11.782 -06:00 [Information] InputPath=C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\Uploads
+2021-06-27 16:21:11.782 -06:00 [Information] OutputPath=C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\PDF
+2021-06-27 16:21:11.782 -06:00 [Information] DownloadPath=C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\Images
+2021-06-27 16:21:11.782 -06:00 [Information] MaxUploadFileByteSize=268435456
+2021-06-27 16:21:11.782 -06:00 [Information] Consumer Configurations ->
+2021-06-27 16:21:11.782 -06:00 [Information] Domain=https://api.magicthegathering.io
+2021-06-27 16:21:11.782 -06:00 [Information] Version=v1
+2021-06-27 16:21:11.782 -06:00 [Information] Resource=cards
+2021-06-27 16:21:11.782 -06:00 [Information] RequestTimeoutSeconds=3600
+2021-06-27 16:21:11.782 -06:00 [Information] --------------------------------------------------
+2021-06-27 16:21:14.457 -06:00 [Debug] Hosting starting
+2021-06-27 16:21:14.779 -06:00 [Debug] Loaded hosting startup assembly "ProxyAPI"
+2021-06-27 16:21:14.781 -06:00 [Information] Application started. Press Ctrl+C to shut down.
+2021-06-27 16:21:14.781 -06:00 [Information] Hosting environment: "Development"
+2021-06-27 16:21:14.781 -06:00 [Information] Content root path: "C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI"
+2021-06-27 16:21:14.781 -06:00 [Debug] Hosting started
+2021-06-27 16:21:14.830 -06:00 [Information] Request starting HTTP/1.1 GET http://localhost:39009/swagger/index.html - -
+2021-06-27 16:21:14.836 -06:00 [Debug] Wildcard detected, all requests with hosts will be allowed.
+2021-06-27 16:21:14.836 -06:00 [Verbose] All hosts are allowed.
+2021-06-27 16:21:15.133 -06:00 [Information] Request finished HTTP/1.1 GET http://localhost:39009/swagger/index.html - - - 200 - text/html;charset=utf-8 305.3670ms
+2021-06-27 16:21:15.256 -06:00 [Information] Request starting HTTP/1.1 GET http://localhost:39009/swagger/1.0/swagger.json - -
+2021-06-27 16:21:15.256 -06:00 [Verbose] All hosts are allowed.
+2021-06-27 16:21:15.520 -06:00 [Information] Request finished HTTP/1.1 GET http://localhost:39009/swagger/1.0/swagger.json - - - 200 - application/json;charset=utf-8 263.4310ms
+2021-06-27 16:21:42.889 -06:00 [Debug] Debug
+2021-06-27 16:21:42.948 -06:00 [Information] Information
+2021-06-27 16:21:42.948 -06:00 [Warning] Warning
+2021-06-27 16:21:42.948 -06:00 [Error] Error
+2021-06-27 16:21:42.948 -06:00 [Fatal] Fatal
+2021-06-27 16:21:42.948 -06:00 [Debug] 2Debug
+2021-06-27 16:21:42.948 -06:00 [Information] 2Information
+2021-06-27 16:21:42.948 -06:00 [Warning] 2Warning
+2021-06-27 16:21:42.948 -06:00 [Error] 2Error
+2021-06-27 16:21:42.948 -06:00 [Fatal] 2Fatal
+2021-06-27 16:21:42.948 -06:00 [Information] --------------------------------------------------
+2021-06-27 16:21:42.948 -06:00 [Information] Initializing API...
+2021-06-27 16:21:42.948 -06:00 [Information] ProjectName=ProxyAPI
+2021-06-27 16:21:42.948 -06:00 [Information] ProjectVersion=1.0
+2021-06-27 16:21:42.948 -06:00 [Information] MachineName=DELL-FFZ35Y2
+2021-06-27 16:21:42.948 -06:00 [Information] EnvironmentName=Development
+2021-06-27 16:21:42.948 -06:00 [Information] SolutionProfile=DEBUG
+2021-06-27 16:21:42.948 -06:00 [Information] Application Configurations ->
+2021-06-27 16:21:42.948 -06:00 [Information] InputPath=C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\Uploads
+2021-06-27 16:21:42.948 -06:00 [Information] OutputPath=C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\PDF
+2021-06-27 16:21:42.948 -06:00 [Information] DownloadPath=C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\Images
+2021-06-27 16:21:42.948 -06:00 [Information] MaxUploadFileByteSize=268435456
+2021-06-27 16:21:42.948 -06:00 [Information] Consumer Configurations ->
+2021-06-27 16:21:42.948 -06:00 [Information] Domain=https://api.magicthegathering.io
+2021-06-27 16:21:42.948 -06:00 [Information] Version=v1
+2021-06-27 16:22:15.418 -06:00 [Debug] Debug
+2021-06-27 16:22:15.461 -06:00 [Information] Information
+2021-06-27 16:22:15.462 -06:00 [Warning] Warning
+2021-06-27 16:22:15.462 -06:00 [Error] Error
+2021-06-27 16:22:15.462 -06:00 [Fatal] Fatal
+2021-06-27 16:22:15.462 -06:00 [Debug] 2Debug
+2021-06-27 16:22:15.462 -06:00 [Information] 2Information
+2021-06-27 16:22:15.462 -06:00 [Warning] 2Warning
+2021-06-27 16:22:15.462 -06:00 [Error] 2Error
+2021-06-27 16:22:15.462 -06:00 [Fatal] 2Fatal
+2021-06-27 16:22:15.462 -06:00 [Information] --------------------------------------------------
+2021-06-27 16:22:15.462 -06:00 [Information] Initializing API...
+2021-06-27 16:22:15.462 -06:00 [Information] ProjectName=ProxyAPI
+2021-06-27 16:22:15.462 -06:00 [Information] ProjectVersion=1.0
+2021-06-27 16:22:15.462 -06:00 [Information] MachineName=DELL-FFZ35Y2
+2021-06-27 16:22:15.462 -06:00 [Information] EnvironmentName=Development
+2021-06-27 16:22:15.462 -06:00 [Information] SolutionProfile=DEBUG
+2021-06-27 16:22:15.462 -06:00 [Information] Application Configurations ->
+2021-06-27 16:22:15.462 -06:00 [Information] InputPath=C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\Uploads
+2021-06-27 16:22:15.462 -06:00 [Information] OutputPath=C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\PDF
+2021-06-27 16:22:15.462 -06:00 [Information] DownloadPath=C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\Images
+2021-06-27 16:22:15.462 -06:00 [Information] MaxUploadFileByteSize=268435456
+2021-06-27 16:22:15.462 -06:00 [Information] Consumer Configurations ->
+2021-06-27 16:22:15.462 -06:00 [Information] Domain=https://api.magicthegathering.io
+2021-06-27 16:22:15.462 -06:00 [Information] Version=v1
+2021-06-27 16:22:15.462 -06:00 [Information] Resource=cards
+2021-06-27 16:22:15.462 -06:00 [Information] RequestTimeoutSeconds=3600
+2021-06-27 16:22:15.462 -06:00 [Information] --------------------------------------------------
+2021-06-27 16:22:18.146 -06:00 [Debug] Hosting starting
+2021-06-27 16:22:18.400 -06:00 [Debug] Loaded hosting startup assembly "ProxyAPI"
+2021-06-27 16:22:18.402 -06:00 [Information] Application started. Press Ctrl+C to shut down.
+2021-06-27 16:22:18.402 -06:00 [Information] Hosting environment: "Development"
+2021-06-27 16:22:18.402 -06:00 [Information] Content root path: "C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI"
+2021-06-27 16:22:18.402 -06:00 [Debug] Hosting started
+2021-06-27 16:22:18.450 -06:00 [Information] Request starting HTTP/1.1 GET http://localhost:39009/swagger/index.html - -
+2021-06-27 16:22:18.454 -06:00 [Debug] Wildcard detected, all requests with hosts will be allowed.
+2021-06-27 16:22:18.611 -06:00 [Information] Request finished HTTP/1.1 GET http://localhost:39009/swagger/index.html - - - 200 - text/html;charset=utf-8 163.5254ms
+2021-06-27 16:22:18.724 -06:00 [Information] Request starting HTTP/1.1 GET http://localhost:39009/swagger/1.0/swagger.json - -
+2021-06-27 16:22:18.859 -06:00 [Information] Request finished HTTP/1.1 GET http://localhost:39009/swagger/1.0/swagger.json - - - 200 - application/json;charset=utf-8 135.1705ms
+2021-06-27 16:22:32.168 -06:00 [Information] Request starting HTTP/1.1 GET http://localhost:39009/api/1.0/Card/newest/Ad Nauseam - -
+2021-06-27 16:22:32.175 -06:00 [Debug] The request path "" does not match the path filter
+2021-06-27 16:22:32.209 -06:00 [Debug] 1 candidate(s) found for the request path '"/api/1.0/Card/newest/Ad Nauseam"'
+2021-06-27 16:22:32.212 -06:00 [Debug] Endpoint '"ProxyAPI.Controllers.CardController.GetCardNewestVersion (ProxyAPI)"' with route pattern '"api/{apiVersion:apiVersion}/Card/newest/{name:minlength(1)}"' is valid for the request path '"/api/1.0/Card/newest/Ad Nauseam"'
+2021-06-27 16:22:32.216 -06:00 [Debug] Request matched endpoint '"ProxyAPI.Controllers.CardController.GetCardNewestVersion (ProxyAPI)"'
+2021-06-27 16:22:32.217 -06:00 [Information] Executing endpoint '"ProxyAPI.Controllers.CardController.GetCardNewestVersion (ProxyAPI)"'
+2021-06-27 16:22:32.225 -06:00 [Debug] Registered model binder providers, in the following order: ["Microsoft.AspNetCore.Mvc.Versioning.ApiVersionModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BinderTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ServicesModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.HeaderModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FloatingPointTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.EnumTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DateTimeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.SimpleTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CancellationTokenModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ByteArrayModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormFileModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormCollectionModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DictionaryModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ArrayModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ComplexObjectModelBinderProvider"]
+2021-06-27 16:22:32.243 -06:00 [Information] Route matched with "{action = \"GetCardNewestVersion\", controller = \"Card\"}". Executing controller action with signature "Microsoft.AspNetCore.Mvc.IActionResult GetCardNewestVersion(System.String)" on controller "ProxyAPI.Controllers.CardController" ("ProxyAPI").
+2021-06-27 16:22:32.245 -06:00 [Debug] Execution plan of "authorization" filters (in the following order): ["ProxyAPI.Security.AuthenticationFilter"]
+2021-06-27 16:22:32.245 -06:00 [Debug] Execution plan of "resource" filters (in the following order): ["None"]
+2021-06-27 16:22:32.246 -06:00 [Debug] Execution plan of "action" filters (in the following order): ["Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter (Order: -3000)", "Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter (Order: -2000)", "Microsoft.AspNetCore.Mvc.ReportApiVersionsAttribute (Order: 0)"]
+2021-06-27 16:22:32.246 -06:00 [Debug] Execution plan of "exception" filters (in the following order): ["None"]
+2021-06-27 16:22:32.246 -06:00 [Debug] Execution plan of "result" filters (in the following order): ["Microsoft.AspNetCore.Mvc.Infrastructure.ClientErrorResultFilter (Order: -2000)", "Microsoft.AspNetCore.Mvc.ReportApiVersionsAttribute (Order: 0)"]
+2021-06-27 16:22:32.247 -06:00 [Debug] Executing controller factory for controller "ProxyAPI.Controllers.CardController" ("ProxyAPI")
+2021-06-27 16:22:32.248 -06:00 [Debug] Executed controller factory for controller "ProxyAPI.Controllers.CardController" ("ProxyAPI")
+2021-06-27 16:22:32.252 -06:00 [Debug] Attempting to bind parameter '"name"' of type '"System.String"' ...
+2021-06-27 16:22:32.254 -06:00 [Debug] Attempting to bind parameter '"name"' of type '"System.String"' using the name '"name"' in request data ...
+2021-06-27 16:22:32.254 -06:00 [Debug] Done attempting to bind parameter '"name"' of type '"System.String"'.
+2021-06-27 16:22:32.254 -06:00 [Debug] Done attempting to bind parameter '"name"' of type '"System.String"'.
+2021-06-27 16:22:32.254 -06:00 [Debug] Attempting to validate the bound parameter '"name"' of type '"System.String"' ...
+2021-06-27 16:22:32.260 -06:00 [Debug] Done attempting to validate the bound parameter '"name"' of type '"System.String"'.
+2021-06-27 16:22:32.262 -06:00 [Information] Processing
+2021-06-27 16:22:32.553 -06:00 [Debug] List of registered output formatters, in the following order: ["Microsoft.AspNetCore.Mvc.Formatters.HttpNoContentOutputFormatter", "Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter", "Microsoft.AspNetCore.Mvc.Formatters.StreamOutputFormatter", "Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter"]
+2021-06-27 16:22:32.555 -06:00 [Debug] Attempting to select an output formatter based on Accept header '["text/plain"]'.
+2021-06-27 16:22:32.555 -06:00 [Debug] Could not find an output formatter based on content negotiation. Accepted types were (["text/plain"])
+2021-06-27 16:22:32.555 -06:00 [Debug] Attempting to select an output formatter without using a content type as no explicit content types were specified for the response.
+2021-06-27 16:22:32.555 -06:00 [Debug] Attempting to select the first formatter in the output formatters list which can write the result.
+2021-06-27 16:22:32.556 -06:00 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter"' and content type '"application/json"' to write the response.
+2021-06-27 16:22:32.556 -06:00 [Information] Executing "OkObjectResult", writing value of type '"ProxyAPI.Models.CardDetails"'.
+2021-06-27 16:22:32.575 -06:00 [Information] Executed action "ProxyAPI.Controllers.CardController.GetCardNewestVersion (ProxyAPI)" in 324.9815ms
+2021-06-27 16:22:32.575 -06:00 [Information] Executed endpoint '"ProxyAPI.Controllers.CardController.GetCardNewestVersion (ProxyAPI)"'
+2021-06-27 16:22:32.576 -06:00 [Information] Request finished HTTP/1.1 GET http://localhost:39009/api/1.0/Card/newest/Ad Nauseam - - - 200 - application/json;+charset=utf-8 407.8940ms

@@ -12,7 +12,7 @@ namespace ProxyAPI.Security
         private static readonly int kiloByte = 1000;
         private static readonly int _maxFileSizeBytes = 10 * kiloByte;
         private static readonly int _minFileSizeBytes = 1;
-        private static readonly string[] _supportedFileTypes = new string[] { ".txt" };
+        private static readonly string[] _supportedFileTypes = new string[] { string.Empty, ".txt" };
         private static readonly string[] _supportedContentTypes = new string[] { "text/plain" };
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -34,7 +34,7 @@ namespace ProxyAPI.Security
 
                         // Allow only approved file extensions for the app's design specification.
                         string fileExt = Path.GetExtension(file.Name).ToLowerInvariant();
-                        if (string.IsNullOrEmpty(fileExt) || !_supportedFileTypes.Contains(fileExt))
+                        if (!_supportedFileTypes.Contains(fileExt))
                         {
                             throw new ArgumentException($"Error: Invalid File ContentType.");
                         }
@@ -75,4 +75,3 @@ namespace ProxyAPI.Security
         }
     }
 }
-

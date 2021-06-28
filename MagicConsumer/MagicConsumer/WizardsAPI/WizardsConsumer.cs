@@ -13,42 +13,25 @@ namespace MagicConsumer.WizardsAPI
     public class WizardsConsumer : IMagicConsumer
     {
         #region Members.
-        private readonly string _downloadPath;
         private readonly string _apiCompositeUrl;
         private readonly int _apiRequestTimeout;
         #endregion
 
         #region Constructors.
+        public WizardsConsumer(ConsumerOptions configs, string downloadPath)
+        {
+            _apiRequestTimeout = configs.RequestTimeoutSeconds;
+            _apiCompositeUrl = $"{configs.Domain}/{configs.Version}/{configs.Resource}";
+
+            ValidateSimpleRequest(downloadPath);
+        }
+
         public WizardsConsumer(string apiDomain, string apiVersion, string apiResource, int apiRequestTimeout, string downloadPath)
         {
-            _downloadPath = downloadPath;
             _apiRequestTimeout = apiRequestTimeout;
             _apiCompositeUrl = $"{apiDomain}/{apiVersion}/{apiResource}";
 
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.DefaultConnectionLimit = 9999;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-
-            ValidateSimpleRequest();
-        }
-
-        private void ValidateSimpleRequest()
-        {
-            const int narsetEnlightenedMasterId = 386616;
-
-            MagicCardDTO card = GetCard(narsetEnlightenedMasterId);
-            if (card == null)
-            {
-                throw new HttpRequestException("Error: ValidateSimpleRequest() Simple Card Request Failed.");
-            }
-
-            string cardPath = DownloadCardImage(card, _downloadPath);
-            if (!File.Exists(cardPath))
-            {
-                throw new HttpRequestException("Error: ValidateSimpleRequest() Simple Image Request Failed.");
-            }
-
-            File.Delete(cardPath);
+            ValidateSimpleRequest(downloadPath);
         }
         #endregion
 
@@ -150,7 +133,7 @@ namespace MagicConsumer.WizardsAPI
             return card;
         }
 
-        public string DownloadCardImage(MagicCardDTO card, string downloadPath)
+        public string DownloadCardImage(MagicCardDTO card, string downloadPath, bool isValidationCheck = false)
         {
             if (card == null || string.IsNullOrEmpty(card.name) || string.IsNullOrEmpty(card.imageUrl) || string.IsNullOrEmpty(downloadPath))
             {
@@ -158,6 +141,12 @@ namespace MagicConsumer.WizardsAPI
             }
 
             string cardPath = $"{downloadPath}/{card.multiverseid}.png";
+            if (isValidationCheck)
+            {
+                Guid guid = new Guid();
+                cardPath = $"{downloadPath}/{guid}.png";
+            }
+
             if (File.Exists(cardPath))
             {
                 File.Delete(cardPath);
@@ -200,6 +189,29 @@ namespace MagicConsumer.WizardsAPI
             // Get card image using imageUrl. And download image.
 
             return cardImagePath;
+        }
+
+        private void ValidateSimpleRequest(string downloadPath)
+        {
+            const int narsetEnlightenedMasterId = 386616;
+
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.DefaultConnectionLimit = 9999;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+            MagicCardDTO card = GetCard(narsetEnlightenedMasterId);
+            if (card == null)
+            {
+                throw new HttpRequestException("Error: ValidateSimpleRequest() Simple Card Request Failed.");
+            }
+
+            string cardPath = DownloadCardImage(card, downloadPath, isValidationCheck: true);
+            if (!File.Exists(cardPath))
+            {
+                throw new HttpRequestException("Error: ValidateSimpleRequest() Simple Image Request Failed.");
+            }
+
+            File.Delete(cardPath);
         }
     }
 }

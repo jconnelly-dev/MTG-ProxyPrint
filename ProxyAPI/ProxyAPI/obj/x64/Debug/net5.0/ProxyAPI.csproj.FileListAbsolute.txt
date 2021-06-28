@@ -4,7 +4,6 @@ C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\obj\x64\Debug\net5.0
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\obj\x64\Debug\net5.0\ProxyAPI.csproj.CoreCompileInputs.cache
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\obj\x64\Debug\net5.0\ProxyAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\obj\x64\Debug\net5.0\ProxyAPI.MvcApplicationPartsAssemblyInfo.cache
-C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\appsettings.Development.json
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\appsettings.json
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\ProxyAPI.exe
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\ProxyAPI.deps.json
@@ -33,3 +32,15 @@ C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\MagicConsumer.dll
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\MagicConsumer.pdb
 C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\obj\x64\Debug\net5.0\ProxyAPI.csproj.AssemblyReference.cache
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\Serilog.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\Serilog.AspNetCore.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\Serilog.Extensions.Hosting.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\Serilog.Extensions.Logging.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\Serilog.Formatting.Compact.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\Serilog.Settings.Configuration.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\Serilog.Sinks.Console.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\Serilog.Sinks.Debug.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\Serilog.Sinks.File.dll
+C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI\bin\x64\Debug\net5.0\Serilog.Sinks.RollingFile.dll

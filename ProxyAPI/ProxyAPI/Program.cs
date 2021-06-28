@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace ProxyAPI
 {
@@ -26,23 +28,12 @@ namespace ProxyAPI
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureLogging((hostingContext, logging) =>
-                {
-                    // Define logging provider and configurations.
-                    logging.ClearProviders();
-                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                    logging.AddConsole();
-                    logging.AddDebug();
-                    logging.AddEventSourceLogger();
-                })
                 .ConfigureAppConfiguration((hostingContext, configuration) =>
                 {
-                    configuration.Sources.Clear();
-                    IHostEnvironment env = hostingContext.HostingEnvironment;
-                    configuration
-                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true);
+                    configuration.SetBasePath(Directory.GetCurrentDirectory());
+                    configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
                 })
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     // Define Startup class as the source for configuring ASP.NET Core application.

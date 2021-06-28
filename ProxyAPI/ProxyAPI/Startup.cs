@@ -14,6 +14,8 @@ using ProxyAPI.Security;
 using MagicConsumer;
 using MagicConsumer.WizardsAPI;
 using Microsoft.AspNetCore.Http.Features;
+using Serilog;
+using Serilog.Events;
 
 namespace ProxyAPI
 {
@@ -24,17 +26,20 @@ namespace ProxyAPI
         private readonly int _apiVersionMajor;
         private readonly int _apiVersionMinor;
         private readonly string _apiVersion;
-        public IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment _env;
+        public IConfiguration _configuration { get; }
         #endregion
 
         #region Constructors.
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
+            _env = env;
+            _configuration = configuration;
+
             _apiName = "ProxyAPI";
             _apiVersionMajor = 1;
             _apiVersionMinor = 0;
             _apiVersion = $"{1}.{0}";
-            Configuration = configuration;
         }
         #endregion
 
@@ -48,12 +53,6 @@ namespace ProxyAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
-            // Set the file upload size limit to an absolute max of 256 MB.
-            services.Configure<FormOptions>(options =>
-            {
-                options.MultipartBodyLengthLimit = 268435456;
-            });
 
             services.AddSwaggerGen(config =>
             {
@@ -74,27 +73,64 @@ namespace ProxyAPI
                 config.ApiVersionReader = new UrlSegmentApiVersionReader();
             });
 
-            // Through dependency injection, instantiate a singleton of our API configs and pass to each service (i.e. each controller).
-            ProxyConfigs singletonConfigs = null;
-            services.AddSingleton<ProxyConfigs>((container) =>
+            // Add 3rd party serilog logger configured based on appsettings section.
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(_configuration)
+                .CreateLogger();
+
+            // Get the settings for this project from the corresponding appsettings file sections.
+            string solutionProfile = _env.IsProduction()
+                ? AppOptions.Release
+                : AppOptions.Development;
+            IConfigurationSection projectSection = _configuration.GetSection(solutionProfile);
+            IConfigurationSection consumerSection = _configuration.GetSection(ConsumerOptions.SectionName);
+
+            // Use 'options pattern' to map the corresponding sections to objects that we can then log and validate.
+            AppOptions configs = projectSection.Get<AppOptions>();
+            ConsumerOptions consumerConfigs = consumerSection.Get<ConsumerOptions>();
+            LogInitConfigurations(configs, consumerConfigs, solutionProfile);
+            configs.Validate();
+            consumerConfigs.Validate();           
+
+            // Set the file upload size limit to an absolute max of 256 MB.
+            services.Configure<FormOptions>(options =>
             {
-                ILogger<ProxyConfigs> logger = container.GetRequiredService<ILogger<ProxyConfigs>>();
-                singletonConfigs = new ProxyConfigs(Configuration, logger, _apiName, _apiVersion, Environment.MachineName);
-                return singletonConfigs;
+                options.MultipartBodyLengthLimit = configs.MaxUploadFileByteSize;
             });
 
-            // Add singleton of our consumer (of external magic APIs) to all controllers through dependency injection.
-            services.AddSingleton<IMagicConsumer>((container) =>
-            {
-                ILogger<IMagicConsumer> logger = container.GetRequiredService<ILogger<IMagicConsumer>>();
-                IMagicConsumer singletonConsumer = new WizardsConsumer(
-                    downloadPath: singletonConfigs.DownloadPath,
-                    apiDomain: singletonConfigs.ApiDomain,
-                    apiVersion: singletonConfigs.ApiVersion,
-                    apiResource: singletonConfigs.ApiResource,
-                    apiRequestTimeout: singletonConfigs.ApiRequestTimeout);
-                return singletonConsumer;
-            });
+            // Add singletons to all controllers through dependency injection.
+            IMagicConsumer consumer = new WizardsConsumer(consumerConfigs, configs.InputPath);
+            services.AddSingleton(consumer);
+            services.AddSingleton(Log.Logger);
+            services.AddSingleton(configs);
+        }
+
+        private void LogInitConfigurations(AppOptions appConfigs, ConsumerOptions extConfigs, string solutionProfile)
+        {
+            Log.Logger.Write(LogEventLevel.Information, "--------------------------------------------------");
+            Log.Logger.Write(LogEventLevel.Information, "Initializing API...");
+            Log.Logger.Write(LogEventLevel.Verbose, "Logging Verbose Enabled...");
+            Log.Logger.Write(LogEventLevel.Debug, "Logging Debug Enabled...");
+            Log.Logger.Write(LogEventLevel.Information, "Logging Information Enabled...");
+            Log.Logger.Write(LogEventLevel.Warning, "Logging Warning Enabled...");
+            Log.Logger.Write(LogEventLevel.Error, "Logging Error Enabled...");
+            Log.Logger.Write(LogEventLevel.Fatal, "Logging Fatal Enabled...");
+            Log.Logger.Write(LogEventLevel.Information, $"ProjectName={_env.ApplicationName}");
+            Log.Logger.Write(LogEventLevel.Information, $"ProjectVersion={_apiVersion}");
+            Log.Logger.Write(LogEventLevel.Information, $"MachineName={Environment.MachineName}");
+            Log.Logger.Write(LogEventLevel.Information, $"EnvironmentName={_env.EnvironmentName}");
+            Log.Logger.Write(LogEventLevel.Information, $"SolutionProfile={solutionProfile}");
+            Log.Logger.Write(LogEventLevel.Information, "Application Configurations ->");
+            Log.Logger.Write(LogEventLevel.Information, $"InputPath={appConfigs.InputPath}");
+            Log.Logger.Write(LogEventLevel.Information, $"OutputPath={appConfigs.OutputPath}");
+            Log.Logger.Write(LogEventLevel.Information, $"DownloadPath={appConfigs.DownloadPath}");
+            Log.Logger.Write(LogEventLevel.Information, $"MaxUploadFileByteSize={appConfigs.MaxUploadFileByteSize}");
+            Log.Logger.Write(LogEventLevel.Information, "Consumer Configurations ->");
+            Log.Logger.Write(LogEventLevel.Information, $"Domain={extConfigs.Domain}");
+            Log.Logger.Write(LogEventLevel.Information, $"Version={extConfigs.Version}");
+            Log.Logger.Write(LogEventLevel.Information, $"Resource={extConfigs.Resource}");
+            Log.Logger.Write(LogEventLevel.Information, $"RequestTimeoutSeconds={extConfigs.RequestTimeoutSeconds}");
+            Log.Logger.Write(LogEventLevel.Information, "--------------------------------------------------");
         }
 
         /*
@@ -115,18 +151,23 @@ namespace ProxyAPI
                 await next();
             });
 
-            if (env.IsDevelopment())
+            if (env.IsProduction())
+            {
+                app.UseExceptionHandler("/Error");
+            }
+            else
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // Use serilog framework instead of builtin microsoft builtin logging.
+            app.UseSerilogRequestLogging();
 
             app.UseSwagger();
             app.UseSwaggerUI(config =>
             {
                 config.SwaggerEndpoint($"/swagger/{_apiVersion}/swagger.json", $"{_apiName} {_apiVersion}");
             });
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 

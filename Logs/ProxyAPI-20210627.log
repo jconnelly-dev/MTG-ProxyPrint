@@ -1,0 +1,43 @@
+21:15:22.441 -06:00 [Information] --------------------------------------------------
+21:15:22.481 -06:00 [Information] Initializing API...
+21:15:22.482 -06:00 [Debug] Logging Debug Enabled...
+21:15:22.482 -06:00 [Information] Logging Information Enabled...
+21:15:22.482 -06:00 [Warning] Logging Warning Enabled...
+21:15:22.482 -06:00 [Error] Logging Error Enabled...
+21:15:22.482 -06:00 [Fatal] Logging Fatal Enabled...
+21:15:22.482 -06:00 [Information] ProjectName=ProxyAPI
+21:15:22.482 -06:00 [Information] ProjectVersion=1.0
+21:15:22.482 -06:00 [Information] MachineName=DELL-FFZ35Y2
+21:15:22.482 -06:00 [Information] EnvironmentName=Development
+21:15:22.482 -06:00 [Information] SolutionProfile=DEBUG
+21:15:22.482 -06:00 [Information] Application Configurations ->
+21:15:22.482 -06:00 [Information] InputPath=C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\Uploads
+21:15:22.482 -06:00 [Information] OutputPath=C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\PDF
+21:15:22.482 -06:00 [Information] DownloadPath=C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\Images
+21:15:22.482 -06:00 [Information] MaxUploadFileByteSize=268435456
+21:15:22.482 -06:00 [Information] Consumer Configurations ->
+21:15:22.483 -06:00 [Information] Domain=https://api.magicthegathering.io
+21:15:22.483 -06:00 [Information] Version=v1
+21:15:22.483 -06:00 [Information] Resource=cards
+21:15:22.483 -06:00 [Information] RequestTimeoutSeconds=3600
+21:15:22.483 -06:00 [Information] --------------------------------------------------
+21:15:25.073 -06:00 [Debug] Hosting starting
+21:15:25.331 -06:00 [Debug] Loaded hosting startup assembly "ProxyAPI"
+21:15:25.333 -06:00 [Information] Application started. Press Ctrl+C to shut down.
+21:15:25.333 -06:00 [Information] Hosting environment: "Development"
+21:15:25.333 -06:00 [Information] Content root path: "C:\TomatoSoup\jconnelly-dev\MTG-Proxy-App\ProxyAPI\ProxyAPI"
+21:15:25.333 -06:00 [Debug] Hosting started
+21:15:25.382 -06:00 [Information] Request starting HTTP/1.1 GET http://localhost:39009/swagger/index.html - -
+21:15:25.387 -06:00 [Debug] Wildcard detected, all requests with hosts will be allowed.
+21:15:25.545 -06:00 [Information] HTTP "GET" "/swagger/index.html" responded 200 in 153.9203 ms
+21:15:25.551 -06:00 [Information] Request finished HTTP/1.1 GET http://localhost:39009/swagger/index.html - - - 200 - text/html;charset=utf-8 172.1240ms
+21:15:25.684 -06:00 [Information] Request starting HTTP/1.1 GET http://localhost:39009/swagger/1.0/swagger.json - -
+21:15:25.806 -06:00 [Information] HTTP "GET" "/swagger/1.0/swagger.json" responded 200 in 121.0850 ms
+21:15:25.817 -06:00 [Information] Request finished HTTP/1.1 GET http://localhost:39009/swagger/1.0/swagger.json - - - 200 - application/json;charset=utf-8 132.5469ms
+21:16:25.871 -06:00 [Information] Request starting HTTP/1.1 GET http://localhost:39009/api/1.0/Card/image/newest/Lightning Bolt - -
+21:16:25.878 -06:00 [Debug] The request path "" does not match the path filter
+21:16:25.951 -06:00 [Debug] 1 candidate(s) found for the request path '"/api/1.0/Card/image/newest/Lightning Bolt"'
+21:16:25.957 -06:00 [Debug] Endpoint '"ProxyAPI.Controllers.CardController.GetCardImageNewestVersion (ProxyAPI)"' with route pattern '"api/{apiVersion:apiVersion}/Card/image/newest/{name:minlength(1)}"' is valid for the request path '"/api/1.0/Card/image/newest/Lightning Bolt"'
+21:16:25.963 -06:00 [Debug] Request matched endpoint '"ProxyAPI.Controllers.CardController.GetCardImageNewestVersion (ProxyAPI)"'
+21:16:25.965 -06:00 [Information] Executing endpoint '"ProxyAPI.Controllers.CardController.GetCardImageNewestVersion (ProxyAPI)"'
+21:16:25.980 -06:00 [Debug] Registered model binder providers, in the following order: ["Microsoft.AspNetCore.Mvc.Versioning.ApiVersionModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BinderTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ServicesModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.HeaderModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FloatingPointTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.EnumTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DateTimeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.SimpleTypeModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CancellationTokenModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ByteArrayModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormFileModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormCollectionModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DictionaryModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ArrayModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinderProvider", "Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ComplexObjectModelBinderProvider"]

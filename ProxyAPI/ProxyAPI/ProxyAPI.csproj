@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
 
   <!-- Create API documentation ontop of swagger -->
@@ -13,9 +13,15 @@
 	
   <!-- Packages installed in Project -->	
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" /> <!--api versioning-->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" /> <!--api versioning--> 
+    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" /> <!--serilog for asp.net-->
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" /> <!--serilog appsettings configs-->
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" /> <!--serilog console logging-->
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" /> <!--serilog file logging-->
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" /> <!--serilog rolling file logging-->
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" /> <!--swagger-->
-  </ItemGroup>	
+  </ItemGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\..\MagicConsumer\MagicConsumer\MagicConsumer.csproj" />
   </ItemGroup>

@@ -53,44 +53,6 @@ namespace ProxyAPI.Parsers
         }
         #endregion
 
-        public List<SimpleDeck> CollectDeckLists()
-        {
-            if (_textFiles == null || _textFiles.Count <= 0)
-            {
-                return null;
-            }
-
-            List<SimpleDeck> decks = new List<SimpleDeck>();
-
-            foreach (FileInfo file in _textFiles)
-            {
-                if (file != null && !string.IsNullOrEmpty(file.Name) && file.Exists)
-                {
-                    SimpleDeck deck = new SimpleDeck(file.Name);
-
-                    using (StreamReader reader = file.OpenText())
-                    {
-                        string line;
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            SimpleCard card = ParseTextFileLine(line);
-                            if (card != null)
-                            {
-                                deck.Cards.Add(card);
-                            }    
-                        }
-                    }
-
-                    if (deck.Cards.Count > 0)
-                    {
-                        decks.Add(deck);
-                    }
-                }
-            }
-
-            return decks;
-        }
-
         public static SimpleCard ParseLine(string line, out string validLine)
         {
             validLine = null;
@@ -142,10 +104,48 @@ namespace ProxyAPI.Parsers
             return result;
         }
 
-        private static SimpleCard ParseTextFileLine(string line)
+        private static SimpleCard ParseLineWrapper(string line)
         {
             string notUsedInThisOverloadMethod;
             return ParseLine(line, out notUsedInThisOverloadMethod);
+        }
+
+        public List<SimpleDeck> CollectDeckLists()
+        {
+            if (_textFiles == null || _textFiles.Count <= 0)
+            {
+                return null;
+            }
+
+            List<SimpleDeck> decks = new List<SimpleDeck>();
+
+            foreach (FileInfo file in _textFiles)
+            {
+                if (file != null && !string.IsNullOrEmpty(file.Name) && file.Exists)
+                {
+                    SimpleDeck deck = new SimpleDeck(file.Name);
+
+                    using (StreamReader reader = file.OpenText())
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            SimpleCard card = ParseLineWrapper(line);
+                            if (card != null)
+                            {
+                                deck.Cards.Add(card);
+                            }
+                        }
+                    }
+
+                    if (deck.Cards.Count > 0)
+                    {
+                        decks.Add(deck);
+                    }
+                }
+            }
+
+            return decks;
         }
     }
 }

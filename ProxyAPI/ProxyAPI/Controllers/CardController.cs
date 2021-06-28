@@ -11,13 +11,14 @@ using ProxyAPI.Models;
 using MagicConsumer;
 using MagicConsumer.WizardsAPI;
 using MagicConsumer.WizardsAPI.DTO;
+using System.Threading.Tasks;
+using System.IO;
 
 namespace ProxyAPI.Controllers
 {
     /// <summary>
-    /// Provides API REST-based Web services for Magic the Gathering Card Proxies.
+    /// Provides Magic the Gathering card information.
     /// </summary>
-    [Authorize]
     [AuthenticationFilter]
     [ApiController]
     [ApiVersion("1.0")]
@@ -26,13 +27,13 @@ namespace ProxyAPI.Controllers
     {
         #region Members.
         private readonly int _trackingId;
-        private readonly ProxyConfigs _configs;
+        private readonly AppOptions _configs;
         private readonly WizardsConsumer _consumer;
         private readonly ILogger<CardController> _logger;
         #endregion
 
         #region Contructors.
-        public CardController(ProxyConfigs configs, IMagicConsumer consumer, ILogger<CardController> logger)
+        public CardController(ILogger<CardController> logger, IMagicConsumer consumer, AppOptions configs)
         {
             // Every request to this controller will have a sudo unique (random) trackingId.
             Random rand = new Random();
@@ -44,22 +45,22 @@ namespace ProxyAPI.Controllers
         }
         #endregion
 
-        #region Web API Endpoints.
+        #region Web API Endpoints - Card Information.
         /// <summary>
-        /// Get the Magic the Gathering card details for the most recent printed version.
+        /// Get the Magic the Gathering card detail for the most recent printed version of named card.
         /// </summary>
-        /// <returns>CardDetails</returns>
-        /// <example>GET: /api/1.0/card/newest/angel's grace</example>
+        /// <returns>CardDetail</returns>
+        /// <example>GET: /api/1.0/card/info/newest/name=angel's grace</example>
         /// <response code="200">Success</response>
-        /// <response code="400">Unable to get CardDetails due to validation errors.</response>
-        /// <response code="500">Unable to get CardDetails due to processing errors.</response>
-        [HttpGet("newest/{name:minlength(1)}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CardDetails))]
+        /// <response code="400">Unable to get CardDetail due to validation errors.</response>
+        /// <response code="500">Unable to get CardDetail due to processing errors.</response>
+        [HttpGet("info/newest/{name:minlength(1)}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CardDetail))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetCardNewestVersion([Required] string name)
+        public IActionResult GetCardInfoNewestVersion([Required][FromRoute] string name)
         {
-            EventId eventId = new EventId(_trackingId, "GetCardNewestVersion()");
+            EventId eventId = new EventId(_trackingId, "GetCardInfoNewestVersion()");
             _logger.Log(LogLevel.Information, eventId, "Processing");
 
             if (!ModelState.IsValid)
@@ -69,7 +70,7 @@ namespace ProxyAPI.Controllers
                 return Problem(statusCode: StatusCodes.Status400BadRequest, detail: errMsg);
             }
 
-            CardDetails result = null;
+            CardDetail result = null;
 
             try
             {
@@ -106,20 +107,20 @@ namespace ProxyAPI.Controllers
         }
 
         /// <summary>
-        /// Get the Magic the Gathering card details for the oldest printed version.
+        /// Get the Magic the Gathering card detail for the oldest printed version of named card.
         /// </summary>
-        /// <returns>CardDetails</returns>
-        /// <example>GET: /api/1.0/card/oldest/liliana%20of%20the%20veil</example>
+        /// <returns>CardDetail</returns>
+        /// <example>GET: /api/1.0/card/info/oldest/name=liliana%20of%20the%20veil</example>
         /// <response code="200">Success</response>
-        /// <response code="400">Unable to get CardDetails due to validation errors.</response>
-        /// <response code="500">Unable to get CardDetails due to processing errors.</response>
-        [HttpGet("oldest/{name:minlength(1)}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CardDetails))]
+        /// <response code="400">Unable to get CardDetail due to validation errors.</response>
+        /// <response code="500">Unable to get CardDetail due to processing errors.</response>
+        [HttpGet("info/oldest/{name:minlength(1)}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CardDetail))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetCardOldestVersion([Required] string name)
+        public IActionResult GetCardInfoOldestVersion([Required][FromRoute] string name)
         {
-            EventId eventId = new EventId(_trackingId, "GetCardOldestVersion()");
+            EventId eventId = new EventId(_trackingId, "GetCardInfoOldestVersion()");
             _logger.Log(LogLevel.Information, eventId, "Processing");
 
             if (!ModelState.IsValid)
@@ -129,7 +130,7 @@ namespace ProxyAPI.Controllers
                 return Problem(statusCode: StatusCodes.Status400BadRequest, detail: errMsg);
             }
 
-            CardDetails result = null;
+            CardDetail result = null;
 
             try
             {
@@ -166,18 +167,18 @@ namespace ProxyAPI.Controllers
         }
 
         /// <summary>
-        /// Get the Magic the Gathering card details for all printed versions of the card.
+        /// Get the Magic the Gathering card detail for all printed versions of the named card.
         /// </summary>
-        /// <returns>List CardDetails</returns>
-        /// <example>GET: /api/1.0/card/fury</example>
+        /// <returns>List CardDetail</returns>
+        /// <example>GET: /api/1.0/card/info/name=fury</example>
         /// <response code="200">Success</response>
         /// <response code="400">Unable to get CardDetails due to validation errors.</response>
         /// <response code="500">Unable to get CardDetails due to processing errors.</response>
-        [HttpGet("{name:minlength(1)}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CardDetails>))]
+        [HttpGet("info/{name:minlength(1)}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CardDetail>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetCardVersions([Required] string name)
+        public IActionResult GetCardVersions([Required][FromRoute] string name)
         {
             EventId eventId = new EventId(_trackingId, "GetCardVersions()");
             _logger.Log(LogLevel.Information, eventId, "Processing");
@@ -189,7 +190,7 @@ namespace ProxyAPI.Controllers
                 return Problem(statusCode: StatusCodes.Status400BadRequest, detail: errMsg);
             }
 
-            List<CardDetails> result = null;
+            List<CardDetail> result = null;
 
             try
             {
@@ -213,10 +214,91 @@ namespace ProxyAPI.Controllers
                     return Problem(statusCode: StatusCodes.Status400BadRequest, detail: errMsg);
                 }
 
-                result = new List<CardDetails>();
+                result = new List<CardDetail>();
                 foreach (MagicCardDTO dto in cardVersions)
                 {
-                    CardDetails details = MapInternalToExternal(dto);
+                    CardDetail details = MapInternalToExternal(dto);
+                    if (details != null)
+                    {
+                        result.Add(details);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, eventId, ex, "Status 500 Internal Server Error. Unhandled Exception.");
+                return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
+            }
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Get the Magic the Gathering card detail for all printed versions of the named cards.
+        /// </summary>
+        /// <returns>List CardDetail</returns>
+        /// <example>GET: /api/1.0/card/info/names=island,mountain</example>
+        /// <response code="200">Success</response>
+        /// <response code="400">Unable to get CardDetails due to validation errors.</response>
+        /// <response code="500">Unable to get CardDetails due to processing errors.</response>
+        [HttpGet("info/{names}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CardDetail>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetCardsVersions([Required][FromRoute] List<string> names)
+        {
+            EventId eventId = new EventId(_trackingId, "GetCardsVersions()");
+            _logger.Log(LogLevel.Information, eventId, "Processing");
+
+            if (!ModelState.IsValid)
+            {
+                string errMsg = "Status 400 Bad Request. Invalid Request.";
+                _logger.Log(LogLevel.Warning, eventId, errMsg);
+                return Problem(statusCode: StatusCodes.Status400BadRequest, detail: errMsg);
+            }
+
+            List<CardDetail> result = null;
+
+            try
+            {
+                List<MagicCardDTO> cardsVersions = null;
+                string namesString = string.Join(",", names);
+
+                try
+                {
+                    Parallel.ForEach(names, name =>
+                    {
+                        if (!string.IsNullOrEmpty(name) && !string.IsNullOrWhiteSpace(name))
+                        {
+                            List<MagicCardDTO> cardVersions = _consumer.GetCards(name);
+                            if (cardVersions != null && cardsVersions.Count > 0)
+                            {
+                                lock (cardsVersions)
+                                {
+                                    cardsVersions.AddRange(cardVersions);
+                                }
+                            }
+                        }
+                    });              
+                }
+                catch (Exception ex)
+                {
+                    string errMsg = $"Status 500 Internal Server Error. {ex.Message}.";
+                    _logger.Log(LogLevel.Error, eventId, errMsg);
+                    return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: errMsg);
+                }
+
+                if (cardsVersions == null || cardsVersions.Count <= 0)
+                {
+                    string errMsg = $"Status 400 Bad Request. Invalid Card Names={namesString}.";
+                    _logger.Log(LogLevel.Warning, eventId, errMsg);
+                    return Problem(statusCode: StatusCodes.Status400BadRequest, detail: errMsg);
+                }
+
+                result = new List<CardDetail>();
+                foreach (MagicCardDTO dto in cardsVersions)
+                {
+                    CardDetail details = MapInternalToExternal(dto);
                     if (details != null)
                     {
                         result.Add(details);
@@ -233,13 +315,137 @@ namespace ProxyAPI.Controllers
         }
         #endregion
 
-        #region Shared Controller Methods.
-        private static CardDetails MapInternalToExternal(MagicCardDTO dto)
+        #region Web API Endpoints - Card Images.
+        /// <summary>
+        /// Get the Magic the Gathering image for the most recent printed version of named card.
+        /// </summary>
+        /// <returns>CardImage</returns>
+        /// <example>GET: /api/1.0/card/image/newest/name=angel's grace</example>
+        /// <response code="200">Success</response>
+        /// <response code="400">Unable to get CardImage due to validation errors.</response>
+        /// <response code="500">Unable to get CardImage due to processing errors.</response>
+        [HttpGet("image/newest/{name:minlength(1)}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(File))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetCardImageNewestVersion([Required][FromRoute] string name)
         {
-            CardDetails result = null;
+            EventId eventId = new EventId(_trackingId, "GetCardImageNewestVersion()");
+            _logger.Log(LogLevel.Information, eventId, "Processing");
+
+            if (!ModelState.IsValid)
+            {
+                string errMsg = "Status 400 Bad Request: Invalid Request.";
+                _logger.Log(LogLevel.Warning, eventId, errMsg);
+                return Problem(statusCode: StatusCodes.Status400BadRequest, detail: errMsg);
+            }
+
+            string contentType = null;
+            byte[] binaryImage = null;
+
+            try
+            {
+                List<MagicCardDTO> cardVersions = _consumer.GetCards(name);
+                List<MagicCardDTO> cardImageVersions = (cardVersions == null) ? null : cardVersions.Where(x => x.multiverseid != null && x.imageUrl != null).OrderBy(x => x.multiverseid).ToList<MagicCardDTO>();
+                if (cardImageVersions != null && cardImageVersions.Count > 0)
+                {
+                    MagicCardDTO newestVersion = cardImageVersions.FirstOrDefault();
+                    if (newestVersion != null && newestVersion.multiverseid != null && newestVersion.imageUrl != null)
+                    {
+                        string imagePath = _consumer.DownloadCardImage(newestVersion, _configs.DownloadPath);
+                        if (imagePath != null)
+                        {
+                            binaryImage = System.IO.File.ReadAllBytes(imagePath);
+                            contentType = "image/png";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, eventId, ex, "Status 500 Internal Server Error. Unhandled Exception.");
+                return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
+            }
+
+            if (binaryImage == null || binaryImage.Length <= 0 || string.IsNullOrEmpty(contentType))
+            {
+                string errMsg = "Status 500 Internal Server Error. Failed to create binary image.";
+                _logger.Log(LogLevel.Warning, eventId, errMsg);
+                return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: errMsg);
+            }
+
+            return File(binaryImage, contentType);
+        }
+
+        /// <summary>
+        /// Get the Magic the Gathering image for the oldest printed version of named card.
+        /// </summary>
+        /// <returns>CardImage</returns>
+        /// <example>GET: /api/1.0/card/image/oldest/name=liliana%20of%20the%20veil</example>
+        /// <response code="200">Success</response>
+        /// <response code="400">Unable to get CardImage due to validation errors.</response>
+        /// <response code="500">Unable to get CardImage due to processing errors.</response>
+        [HttpGet("image/oldest/{name:minlength(1)}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(File))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetCardImageOldestVersion([Required][FromRoute] string name)
+        {
+            EventId eventId = new EventId(_trackingId, "GetCardImageOldestVersion()");
+            _logger.Log(LogLevel.Information, eventId, "Processing");
+
+            if (!ModelState.IsValid)
+            {
+                string errMsg = "Status 400 Bad Request: Invalid Request.";
+                _logger.Log(LogLevel.Warning, eventId, errMsg);
+                return Problem(statusCode: StatusCodes.Status400BadRequest, detail: errMsg);
+            }
+
+            string contentType = null;
+            byte[] binaryImage = null;
+
+            try
+            {
+                List<MagicCardDTO> cardVersions = _consumer.GetCards(name);
+                List<MagicCardDTO> cardImageVersions = (cardVersions == null) ? null : cardVersions.Where(x => x.multiverseid != null && x.imageUrl != null).OrderByDescending(x => x.multiverseid).ToList<MagicCardDTO>();
+                if (cardImageVersions != null && cardImageVersions.Count > 0)
+                {
+                    MagicCardDTO oldestVersion = cardImageVersions.FirstOrDefault();
+                    if (oldestVersion != null && oldestVersion.multiverseid != null && oldestVersion.imageUrl != null)
+                    {
+                        string imagePath = _consumer.DownloadCardImage(oldestVersion, _configs.DownloadPath);
+                        if (imagePath != null)
+                        {
+                            binaryImage = System.IO.File.ReadAllBytes(imagePath);
+                            contentType = "image/png";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, eventId, ex, "Status 500 Internal Server Error. Unhandled Exception.");
+                return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
+            }
+
+            if (binaryImage == null || binaryImage.Length <= 0 || string.IsNullOrEmpty(contentType))
+            {
+                string errMsg = "Status 500 Internal Server Error. Failed to create binary image.";
+                _logger.Log(LogLevel.Warning, eventId, errMsg);
+                return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: errMsg);
+            }
+
+            return File(binaryImage, contentType);
+        }
+        #endregion
+
+        #region Shared Controller Methods.
+        private static CardDetail MapInternalToExternal(MagicCardDTO dto)
+        {
+            CardDetail result = null;
             if (dto != null)
             {
-                result = new CardDetails()
+                result = new CardDetail()
                 {
                     Name = dto.name,
                     ManaCost = dto.manaCost,
